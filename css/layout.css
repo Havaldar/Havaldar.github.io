@@ -4,6 +4,7 @@ body {
 	font-family: 'Inconsolata';
 	height: 100%;
 	font-weight: 700;
+	line-height: 1;
 }
 input {
 	background-color: white;
@@ -12,7 +13,7 @@ input {
 	outline: none;
 	font-size: 15pt;
 	font-family: 'Inconsolata';
-	width: 70%;
+	width: 60%;
 	font-weight: 700;
 }
 html {
@@ -20,9 +21,13 @@ html {
 }
 hr {
 	border-style: dashed;
+	border-color: black;
 }
 #me {
 	height: 100%;
-	border-left: dashed 2px black;
-
+	border-left: dashed 1px black;
+	padding-left: 10px;
+}
+hi {
+	color: red;
 }

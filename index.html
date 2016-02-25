@@ -1,6 +1,7 @@
 <!doctype html>
 <html ng-app='Terminal'>
     <head>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <title>That Guy That Loves Chocolate Milk</title>
@@ -10,23 +11,45 @@
         <link rel="icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body ng-controller='MainCtrl'>
-        <h1>Abhinav Havaldar A.K.A. That Guy That Loves Chocolate Milk</h1>
+        <h1 style="text-align: center;">Abhinav Havaldar A.K.A. That Guy That Loves Chocolate Milk</h1>
         <hr>
-        <div style="display: block; margin: 0 auto;width: 20%;float: right;" id="me">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;__<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;<eye>O</eye>\&nbsp;/|&nbsp;|'-.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;.\__/&nbsp;||&nbsp;|&nbsp;&nbsp;&nbsp;|<br>
-            &nbsp;_&nbsp;/&nbsp;&nbsp;`._&nbsp;\|_|_.-'<br>
-            |&nbsp;/&nbsp;&nbsp;\__.`=._)&nbsp;(_<br>
-            |/&nbsp;._/&nbsp;&nbsp;|"""""""""|<br>
-            |'.&nbsp;&nbsp;`\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-            &nbsp;"""/&nbsp;/&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-            &nbsp;)&nbsp;/_/|&nbsp;|.-------.|<br>
-            '&nbsp;&nbsp;`-`'&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<br>
+        <div class="row" style="padding-left: 1em;">
+            <div class="col-md-8">
+                <div ng-bind-html='trust(commands)' class="row">
+                    
+                </div>
+                <div class="row">
+                    <form ng-submit="enter_command(current_command)">
+                    {{guest}} >> <input ng-model='current_command'></input>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4" style="display: block; margin: 0 auto;float: right;" id="me">
+                Your Name:
+                <input type="name" class="form-control" id="name" placeholder="Your Name" ng-model='guest'><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;__<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;<eye>O</eye>\&nbsp;/|&nbsp;|'-.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.\__/&nbsp;||&nbsp;|&nbsp;&nbsp;&nbsp;|<--Abhinav working<br>
+                &nbsp;&nbsp;&nbsp;_&nbsp;/&nbsp;&nbsp;`._&nbsp;\|_|_.-'&nbsp;&nbsp;&nbsp;hard at this.<br>
+                &nbsp;&nbsp;|&nbsp;/&nbsp;&nbsp;\__.`=._)&nbsp;(_&nbsp;&nbsp;&nbsp;&nbsp;site<br>
+                &nbsp;&nbsp;|/&nbsp;._/&nbsp;&nbsp;|"""""""""|<br>
+                &nbsp;&nbsp;|'.&nbsp;&nbsp;`\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                &nbsp;&nbsp;&nbsp;"""/&nbsp;/&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                &nbsp;&nbsp;&nbsp;)&nbsp;/_/|&nbsp;|.-------.|<br>
+                &nbsp;&nbsp;'&nbsp;&nbsp;`-`'&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<br>
+                <br>    
+                INSTRUCTIONS:<br>
+                -------------<br> 
+                <hi>ls</hi>: This will give you a list of all the directories and files in the working directory.<br><br> 
+                <hi>cd</hi>: directory_name: This will change directory such that you will be in your specified directory.<br> <br> 
+                <hi>cd ..</hi>: Use this command to go back one directory.<br><br> 
+                <hi>cd</hi>: By typing just cd you will go to the root directory.<br><br>  
+                <hi>pwd</hi>: This command will tell you the current directory you are in.<br><br> 
+                <hi>cat text_file</hi>: cat will print out the contents of the specified text file. Please just use it with files with a .txt extention. You can also print many files at a time simply by seperating them with spaces.<br><br>
+                <hi>open file_name</hi>: open will open the specified file in your program of preference (i.e. this webiste). Use this with .file extentions. This is limited to one file at a time.
+
+            </div>
         </div>
-        </div>
-        <div ng-bind-html='trust(commands)'></div>
-        <div><form ng-submit="enter_command(current_command)">guest >> <input ng-model='current_command'></input></form></div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
@@ -35,9 +58,9 @@
         <script type="text/javascript">
             $('#me').click(function() {
                 $('eye').html('-');
-            });
-            $('body').click(function() {
-                $('input').focus();
+                setTimeout(function(){
+                    $('eye').html('O');
+                }, 300);
             });
         </script>
     </body>

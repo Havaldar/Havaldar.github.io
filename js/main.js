@@ -1,5 +1,6 @@
 var app = angular.module("Terminal",[]);
 app.controller('MainCtrl', function($scope, $sce) {
+	$scope.guest = "guest";
 	$scope.commands = "";
 	$scope.current_command = "";
 	$scope.path = [];
@@ -27,9 +28,8 @@ app.controller('MainCtrl', function($scope, $sce) {
 		}
 	};
 	$scope.current_dir = $scope.files;
-	$scope.name = "guest";
 	$scope.enter_command = function(command) {
-		$scope.commands += "guest >> " + command + "<br />";
+		$scope.commands += $scope.guest + " >> " + command + "<br />";
 		$scope.current_command = "";
 		if (command === "clear") {
 			$scope.commands = "";
@@ -62,7 +62,14 @@ app.controller('MainCtrl', function($scope, $sce) {
 				}
 			}
 		} else if (command.substring(0,4).trim() === "cat") {
-			$scope.commands += $scope.current_dir[command.substring(3).trim()] + "<br />";
+			var arr = command.substring(3).trim().split(/[ ,]+/);
+			for (var i in arr) {
+				if ($scope.current_dir[arr[i]] && typeof($scope.current_dir[arr[i]])==='string'){
+					$scope.commands += $scope.current_dir[arr[i]] + "<br />";
+				} else {
+					$scope.commands += '<p style=\"color:#ff0033;margin:0;\">'+arr[i]+' is not a txt file</p>';
+				}
+			}
 		} else if (command.trim().substring(0,3) === "pwd") {
 			if ($scope.path.length === 0) {
 				$scope.commands += 'root<br>'
@@ -72,7 +79,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				}
 				$scope.commands += "<br>";
 			}
-		} else if (command == "") {
+		} else if (command.trim() == "") {
 
 		} else {
 			$scope.commands += "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>";
