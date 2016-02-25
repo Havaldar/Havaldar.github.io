@@ -1,0 +1,44 @@
+<!doctype html>
+<html ng-app='Terminal'>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>That Guy That Loves Chocolate Milk</title>
+        <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="css/layout.css">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+    </head>
+    <body ng-controller='MainCtrl'>
+        <h1>Abhinav Havaldar A.K.A. That Guy That Loves Chocolate Milk</h1>
+        <hr>
+        <div style="display: block; margin: 0 auto;width: 20%;float: right;" id="me">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;__<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;<eye>O</eye>\&nbsp;/|&nbsp;|'-.<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.\__/&nbsp;||&nbsp;|&nbsp;&nbsp;&nbsp;|<br>
+            &nbsp;_&nbsp;/&nbsp;&nbsp;`._&nbsp;\|_|_.-'<br>
+            |&nbsp;/&nbsp;&nbsp;\__.`=._)&nbsp;(_<br>
+            |/&nbsp;._/&nbsp;&nbsp;|"""""""""|<br>
+            |'.&nbsp;&nbsp;`\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+            &nbsp;"""/&nbsp;/&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+            &nbsp;)&nbsp;/_/|&nbsp;|.-------.|<br>
+            '&nbsp;&nbsp;`-`'&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<br>
+        </div>
+        </div>
+        <div ng-bind-html='trust(commands)'></div>
+        <div><form ng-submit="enter_command(current_command)">guest >> <input ng-model='current_command'></input></form></div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript">
+            $('#me').click(function() {
+                $('eye').html('-');
+            });
+            $('body').click(function() {
+                $('input').focus();
+            });
+        </script>
+    </body>
+</html>
