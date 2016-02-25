@@ -13,18 +13,25 @@
     <body ng-controller='MainCtrl'>
         <h1 style="text-align: center;">Abhinav Havaldar A.K.A. That Guy That Loves Chocolate Milk</h1>
         <hr>
-        <div class="row" style="padding-left: 1em;">
+        <div>
             <div class="col-md-8">
+                <div class="col-md-12" style="text-align: center;margin-bottom: 10px;">
+                    ////////////////////////////////////////////////<br>
+                    ///&nbsp;Welcome to the command line to Abhinav's&nbsp;///<br>
+                    ///&nbsp;Life. It uses basic linux commands just&nbsp;&nbsp;///<br>
+                    ///&nbsp;like Abhinav.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///<br>
+                    ////////////////////////////////////////////////<br>
+                </div>
                 <div ng-bind-html='trust(commands)' class="row">
                     
                 </div>
                 <div class="row">
                     <form ng-submit="enter_command(current_command)">
-                    {{guest}} >> <input ng-model='current_command'></input>
+                        <em width='15%'>{{guest}} >> </em> <input ng-model='current_command' width="85%"></input>
                     </form>
                 </div>
             </div>
-            <div class="col-md-4" style="display: block; margin: 0 auto;float: right;" id="me">
+            <div class="col-md-4" id="me">
                 Your Name:
                 <input type="name" class="form-control" id="name" placeholder="Your Name" ng-model='guest'><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;__<br>
@@ -56,12 +63,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
-            $('#me').click(function() {
+            window.setInterval(function() {
                 $('eye').html('-');
                 setTimeout(function(){
                     $('eye').html('O');
-                }, 300);
-            });
+                }, 200);
+            }, 4500)
         </script>
     </body>
 </html>
