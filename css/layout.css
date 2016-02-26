@@ -13,7 +13,7 @@ input {
 	outline: none;
 	font-size: 15pt;
 	font-family: 'Inconsolata';
-	width: 60%;
+	width: 85%;
 	font-weight: 700;
 }
 html {
@@ -27,7 +27,19 @@ hr {
 	height: 100%;
 	border-left: dashed 1px black;
 	padding-left: 10px;
+	border-bottom: dashed 1px black;
+	padding-bottom: 10px;
+}
+#name {
+	width: 75%;
 }
 hi {
 	color: red;
+}
+label {
+	margin-top: 6px;
+	padding-right: 0;
+}
+div {
+	word-wrap: break-word;
 }
