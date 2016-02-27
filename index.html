@@ -4,14 +4,31 @@
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>That Guy That Loves Chocolate Milk</title>
+        <title>ThatGuyThatLovesChocolateMilk</title>
         <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="css/layout.css">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body ng-controller='MainCtrl'>
-        <h1 style="text-align: center;">Abhinav Havaldar A.K.A. That Guy That Loves Chocolate Milk</h1>
+        <div class="row">
+            <div class='col-md-1'>
+                <div class="onoffswitch" style="margin: 0 auto; margin-top: 50%;">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+                    <label class="onoffswitch-label" for="myonoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div> 
+            <h1 style="text-align: center; margin-top:3%;" class="col-md-9">Abhinav A.K.A. That Guy That Loves Chocolate Milk</h1>
+            <div class="col-md-2" id="bulb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<light><ray7></ray7><br>
+                &nbsp;&nbsp;&nbsp;<ray6>&nbsp;</ray6>.-.<ray5></ray5><br>
+                &nbsp;<ray1>&nbsp;&nbsp;</ray1>(&nbsp;&nbsp;&nbsp;)<ray4></ray4><br>
+                &nbsp;&nbsp;&nbsp;<ray2>&nbsp;</ray2>\&nbsp;/<ray3></ray3></light><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;|=|
+            </div>
+        </div>
         <hr>
         <div>
             <div class="col-md-8">
@@ -42,7 +59,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;<eye>o</eye>\<light1>&nbsp;</light1>/|&nbsp;|'-.<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.\__/<light2>&nbsp;</light2>||&nbsp;|&nbsp;&nbsp;&nbsp;|<--Abhinav working<br>
                 &nbsp;&nbsp;&nbsp;_&nbsp;/&nbsp;&nbsp;`._<light3>&nbsp;</light3>\|_|_.-'&nbsp;&nbsp;&nbsp;hard at this.<br>
-                &nbsp;&nbsp;|&nbsp;/&nbsp;&nbsp;\__.`<finger>=</finger>._)&nbsp;(_&nbsp;&nbsp;&nbsp;&nbsp;site<br>
+                &nbsp;&nbsp;|&nbsp;/&nbsp;&nbsp;\__.<finger>-</finger>&nbsp;._)&nbsp;(_&nbsp;&nbsp;&nbsp;&nbsp;site<br>
                 &nbsp;&nbsp;|/&nbsp;._/&nbsp;&nbsp;|"""""""""|<br>
                 &nbsp;&nbsp;|'.&nbsp;&nbsp;`\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
                 &nbsp;&nbsp;&nbsp;"""/&nbsp;/&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
@@ -58,7 +75,7 @@
                 <hi>cd</hi>: By typing just cd you will go to the root directory.<br><br>  
                 <hi>pwd</hi>: This command will tell you the current directory you are in.<br><br> 
                 <hi>cat text_file</hi>: cat will print out the contents of the specified text file. Please just use it with files with a .txt extention. You can also print many files at a time simply by seperating them with spaces.<br><br>
-                <hi>open file_name</hi>: open will open the specified file in your program of preference (i.e. this webiste). Use this with .file extentions. This is limited to one file at a time.
+                <hi>open file_name</hi>: open will open the specified file in your program of preference (i.e. this website). Use this with .file extentions. This is limited to one file at a time.
 
             </div>
         </div>
@@ -68,6 +85,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
+            var isOn = false;
             $('.click').click(function() {
                 $('#command').focus();
             })
@@ -86,10 +104,7 @@
             window.setInterval(function() {
                 $('finger').html('\\');
                 setTimeout(function(){
-                    $('finger').html('=');
-                    $('light1').html('&nbsp');
-                    $('light2').html('&nbsp');
-                    $('light3').html('&nbsp');
+                    $('finger').html('-');
                 }, 200);
             }, 350);
             window.setInterval(function() {
@@ -100,15 +115,71 @@
                     $('light1').html('&nbsp');
                     $('light2').html('&nbsp');
                     $('light3').html('&nbsp');
-                }, 1000);
-            },1400)
+                }, 400);
+            },800)
+            window.setInterval(function() {
+                $('ray1').html('--');
+                $('ray2').html('/');
+                $('ray3').html('\\');
+                $('ray4').html('--');
+                $('ray5').html('/');
+                $('ray6').html('\\');
+                $('ray7').html('|');
+                if ($('#myonoffswitch').prop('checked')) {
+                    $('light').css('color','#83F52C');
+                } else {
+                    $('light').css('color','#FFD700');
+                }
+                setTimeout(function(){
+                    $('ray1').html('&nbsp;&nbsp;');
+                    $('ray2').html('&nbsp;');
+                    $('ray3').html('');
+                    $('ray4').html('');
+                    $('ray5').html('');
+                    $('ray6').html('&nbsp;');
+                    if ($('#myonoffswitch').prop('checked')) {
+                        $('light').css('color','white');
+                    } else {
+                        $('light').css('color','black');
+                    }
+                    $('ray7').html('');
+                }, 400);
+            },800);
             $(document).ready(function() {
-                var text = "Welcome, this is a command line to Abhinav's life. It uses basic linux commands just like Abhinav. For more Instructions or Info look to the left.";
+                var text = "Welcome, my name is Abhinav Havaldar. I am currently a sophomore at NYU studying computer science and mathematics. I am an aspiring software developer and data scientist. This is a command line to my life. It uses basic linux commands just like me. For more Instructions on commands look to the left.";
                 var i = 0;
                 window.setInterval(function() {
                     $('#intro').append(text.charAt(i));
                     i++;
                 }, 25);
+                setTimeout(function() {
+
+                }, 3650);
+            });
+            $('.onoffswitch').click(function(){
+                if ($('#myonoffswitch').prop('checked')) {
+                    $('body').css('color','#83F52C');
+                    $('body').css('background-color','#000');
+                    $('input').css('background-color','#000');
+                    $('hi').css('color','#fff');
+                    $('#me').css('border-left','dashed 1px #83F52C');
+                    $('#me').css('border-bottom','dashed 1px #83F52C');
+                    $('hr').css('border','dashed 1px #83F52C');
+                    $('#name').css('color', '#83F52C');
+                    $('#bulb').css('color', 'white');
+                }
+                else {
+                    $('body').css('color','');
+                    $('body').css('background-color','');
+                    $('input').css('background-color','');
+                    $('hi').css('color','');
+                    $('#me').css('border-left','');
+                    $('#me').css('border-bottom','');
+                    $('hr').css('border','');
+                    $('#name').css('color', '');
+                    $('#bulb').css('color', '');
+                }
+
             });
         </script>
     </body>
