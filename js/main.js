@@ -1,5 +1,73 @@
 var app = angular.module("Terminal",[]);
 app.controller('MainCtrl', function($scope, $sce) {
+	$scope.terminal = true;
+	$scope.simple = false;
+	$scope.switch = function() {
+		$scope.simple = true;
+		$scope.terminal = false;
+	};
+	var possible_commands = [
+		"clear",
+		"ls",
+		"cd",
+		"open",
+		"cat",
+		"pwd"
+	];
+	// function get_potential_commands(command) {
+	// 	var commands = command.trim().split(" ");
+	// 	if(commands.length > 1) {
+
+	// 	} else if(commands.length == 1) {
+	// 		var exp = commands[0];
+	// 		var re = new RegExp(exp);
+	// 		var result = [];
+	// 		for(var i  : $scope.possible_commands) {
+	// 			if(i.search() > 0)	
+	// 				result.push(i);
+	// 		}
+	// 		if (result.length === 1) {
+	// 			return command + result[0];
+	// 		}
+	// 		else {
+	// 			return command;
+	// 		}
+	// 	} else {
+	// 		return command;
+	// 	}
+	// };
+	$scope.autocomplete = function(e, current_command) {
+		var keyCode = e["keyCode"]; 
+		if (keyCode == 9) {
+			e.preventDefault();
+			var searchterms = current_command.trim().split(" ",2);
+			if(searchterms[0] !== "") {
+				if(searchterms.length > 1) {
+					var files = Object.keys($scope.current_dir);
+					var result = [];
+					for (var i = 0; i < files.length; i++) {
+						if (searchterms[1].slice(0,files[i].length-1) === searchterms[1])
+							result.push(files[i]);
+					}
+					if (result.length === 1) {
+						console.log(result[0]);
+					}
+				}
+				else {
+					console.log(1)
+					var result = [];
+
+					for(var i in possible_commands) {
+						if(possible_commands[i].slice(0, searchterms[0].length) === searchterms[0]) 
+							result.push(possible_commands[i]);
+					}	
+					if(result.length === 1) {
+						$scope.current_command = result[0];
+					}
+				}
+			}
+		}
+	};
 	$scope.guest = "guest";
 	$scope.commands = "";
 	$scope.current_command = "";
@@ -51,7 +119,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 					'title': 'IXperience Web Developer Intern', 
 					'description': 'Assisted in developing alumni platform website and responsible for backend development of platform <br> Worked with Type Form API in order to improve how potential client data is stored', 
 					'url': "http://ixperience.co.za/",
-					'img': '-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;_..::__:&nbsp;&nbsp;,-"-"._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_,.__<br>&nbsp;&nbsp;&nbsp;_.___&nbsp;_&nbsp;_<_>`!(._`.`-.&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`_&nbsp;,_/&nbsp;&nbsp;\'&nbsp;&nbsp;\'-._.---.-.__<br>>.{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;"&nbsp;`-==,\',._\\{&nbsp;&nbsp;\\&nbsp;&nbsp;/&nbsp;{)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;_&nbsp;">_,-\'&nbsp;`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt-2_<br>&nbsp;&nbsp;\\_.:--.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._&nbsp;)`^-.&nbsp;"\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;[_/(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__,/-\'<br>&nbsp;\'"\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;_L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oD_,--\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/.&nbsp;(|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)_.\\\\._<>&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_,\'&nbsp;/&nbsp;&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_/_\'`&nbsp;`"(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<\'}&nbsp;&nbsp;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\\\&nbsp;&nbsp;&nbsp;&nbsp;.-.&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;`-\'"..\'&nbsp;`:.#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)&nbsp;&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;(&nbsp;&nbsp;`(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`:\\&nbsp;&nbsp;>&nbsp;\\&nbsp;&nbsp;,-^.&nbsp;&nbsp;/\'&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._,&nbsp;&nbsp;&nbsp;""&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\`\'&nbsp;&nbsp;&nbsp;\\|&nbsp;&nbsp;&nbsp;?_)&nbsp;&nbsp;{\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`=.---.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"`&nbsp;&nbsp;|\'&nbsp;,-&nbsp;\'.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;`-._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`:`<_|h--._<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`=.__.`-\'\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|{|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,-.,\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;&nbsp;/&nbsp;`\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;/&nbsp;&nbsp;Cape&nbsp;Town-->X_\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;__&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'-\'&nbsp;&nbsp;`-\'&nbsp;&nbsp;&nbsp;\\.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______._.--._&nbsp;_..---.---------._<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,-----"-..?----_/&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__,-\'"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br>-.._(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-----\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-<br>-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----<br>'
+					'img': '-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;_..::__:&nbsp;&nbsp;,-"-"._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_,.__<br>&nbsp;&nbsp;&nbsp;_.___&nbsp;_&nbsp;_<_>`!(._`.`-.&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`_&nbsp;,_/&nbsp;&nbsp;\'&nbsp;&nbsp;\'-._.---.-.__<br>>.{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;"&nbsp;`-==,\',._\\{&nbsp;&nbsp;\\&nbsp;&nbsp;/&nbsp;{)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;_&nbsp;">_,-\'&nbsp;`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt-2_<br>&nbsp;&nbsp;\\_.:--.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._&nbsp;)`^-.&nbsp;"\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;[_/(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__,/-\'<br>&nbsp;\'"\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;_L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oD_,--\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/.&nbsp;(|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)_.\\\\._<>&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_,\'&nbsp;/&nbsp;&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_/_\'`&nbsp;`"(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<\'}&nbsp;&nbsp;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\\\&nbsp;&nbsp;&nbsp;&nbsp;.-.&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;`-\'"..\'&nbsp;`:.#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)&nbsp;&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;(&nbsp;&nbsp;`(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`:\\&nbsp;&nbsp;>&nbsp;\\&nbsp;&nbsp;,-^.&nbsp;&nbsp;/\'&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._,&nbsp;&nbsp;&nbsp;""&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\`\'&nbsp;&nbsp;&nbsp;\\|&nbsp;&nbsp;&nbsp;?_)&nbsp;&nbsp;{\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`=.---.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"`&nbsp;&nbsp;|\'&nbsp;,-&nbsp;\'.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;`-._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`:`<_|h--._<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`=.__.`-\'\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|{|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,-.,\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;&nbsp;/&nbsp;`\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;/&nbsp;Cape&nbsp;Town-->iX_\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;__&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'-\'&nbsp;&nbsp;`-\'&nbsp;&nbsp;&nbsp;\\.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______._.--._&nbsp;_..---.---------._<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,-----"-..?----_/&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__,-\'"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br>-.._(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-----\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-<br>-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----<br>'
 				},
 				'grader.file' : {
 					'title': 'Grader, Introduction to Computer Science', 
@@ -65,7 +133,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				'.is_dir': true,
 				'anime_manga.file': {
 					'title': 'Anime and Manga',
-					'img':"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_____<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp\\<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspvvvvvvv&nbsp&nbsp\/|__\/|<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspI&nbsp&nbsp&nbsp\/O,O&nbsp&nbsp&nbsp|<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspI&nbsp\/_____&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/|\/|<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspJ|\/^&nbsp^&nbsp^&nbsp\\&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp\/00&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp_\/\/|<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|^&nbsp^&nbsp^&nbsp^&nbsp|W|&nbsp&nbsp&nbsp|\/^^\\&nbsp|&nbsp&nbsp&nbsp\/oo&nbsp|<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\m___m__|_|&nbsp&nbsp&nbsp&nbsp\\m_m_|&nbsp&nbsp&nbsp\\mm_|",
+					'img':"&nbsp_____<br />\/&nbsp&nbsp&nbsp&nbsp&nbsp\\<br />vvvvvvv&nbsp&nbsp\/|__\/|<br />&nbsp&nbsp&nbspI&nbsp&nbsp&nbsp\/O,O&nbsp&nbsp&nbsp|<br />&nbsp&nbspI&nbsp\/_____&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/|\/|<br />&nbsp&nbspJ|\/^&nbsp^&nbsp^&nbsp\\&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp\/00&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp_\/\/|<br />&nbsp&nbsp&nbsp|^&nbsp^&nbsp^&nbsp^&nbsp|W|&nbsp&nbsp&nbsp|\/^^\\&nbsp|&nbsp&nbsp&nbsp\/oo&nbsp|<br />&nbsp&nbsp&nbsp&nbsp\\m___m__|_|&nbsp&nbsp&nbsp&nbsp\\m_m_|&nbsp&nbsp&nbsp\\mm_|",
 					'description': 'I love watching anime and reading manga. In fact, I spent a summer in Japan studying animation techniques and Japanese Languag at the Yoyogi Animation Gakkuin. I plan on studying Japanese through college and hope I have the oppertunity to visit again.'
 				},
 				'football.file': {
@@ -108,23 +176,26 @@ app.controller('MainCtrl', function($scope, $sce) {
 			$scope.current_dir = $scope.files;
 			$scope.path = [];
 		} else if (command.substring(0,3) === "cd ") {
-			if ($scope.current_dir[command.substring(3).trim()] != undefined && $scope.current_dir[command.substring(3).trim()]['.is_dir']) {
-				$scope.current_dir = $scope.current_dir[command.substring(3).trim()];
-				$scope.path.push(command.substring(3).trim());
-			} else {
-				var matches = command.match(/\.{2}/g);
-				if (matches.length > 0) {
-					$scope.current_dir = $scope.files;
-					for(var i = 0; i < ($scope.path.length-matches.length);i++) {
-						$scope.current_dir = $scope.current_dir[$scope.path[i]];
-					}
-					for(var i = $scope.path.length-1; i >= ($scope.path.length-matches.length);i--) {
-						$scope.path.pop();
-					}
+			var arr = command.substring(3).trim().split('/');
+			for (var i = 0; i < arr.length; i++) {
+				if ($scope.current_dir[arr[i].trim()] != undefined && $scope.current_dir[arr[i].trim()]['.is_dir']) {
+					$scope.current_dir = $scope.current_dir[arr[i].trim()];
+					$scope.path.push(arr[i].trim());
 				} else {
-					$scope.commands += "Sorry thats not a directory<br />";
+					var matches = command.match(/\.{2}/g);
+					if (matches.length > 0) {
+						$scope.current_dir = $scope.files;
+						for(var i = 0; i < ($scope.path.length-matches.length);i++) {
+							$scope.current_dir = $scope.current_dir[$scope.path[i]];
+						}
+						for(var i = $scope.path.length-1; i >= ($scope.path.length-matches.length);i--) {
+							$scope.path.pop();
+						}
+					} else {
+						$scope.commands += "Sorry thats not a directory<br />";
+					}
 				}
-			}
+			}	
 		} else if (command.substring(0,4).trim() === "cat") {
 			var arr = command.substring(3).trim().split(/[ ,]+/);
 			for (var i in arr) {
@@ -148,12 +219,15 @@ app.controller('MainCtrl', function($scope, $sce) {
 		} else if (command.substring(0,5).trim() === "open") {
 			var file = command.substring(5).trim();
 			if (file.substring(file.length - 5) === '.file') {
-				$scope.commands += '<br>' + $scope.current_dir[file]['img'] + '<br>';
-				$scope.commands += '<a target="_blank" href=\"'+$scope.current_dir[file]['url']+'\">'+$scope.current_dir[file]['title']+'</a>'+'<br>';
-				$scope.commands += $scope.current_dir[file]['description'] + '<br><br>';
+				$scope.commands += '<br><div class="col-md-6">' + $scope.current_dir[file]['img'] + '</div>';
+				$scope.commands += '<div class="col-md-6"><a target="_blank" href=\"'+$scope.current_dir[file]['url']+'\">'+$scope.current_dir[file]['title']+'</a>'+'<br>'+ $scope.current_dir[file]['description'] + '</div><br><br>';
 			} else {
 
 			}
+		} else if (command.substring(0,7).trim() === "switch") {
+			$scope.terminal = false;
+			$scope.simple = true;
+
 		} else {
 			$scope.commands += "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>";
 		}

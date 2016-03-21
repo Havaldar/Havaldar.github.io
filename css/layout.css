@@ -64,13 +64,13 @@ div {
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "GB";
-    padding-left: 8px;
+    content: "Neon";
+    padding-left: 3px;
     background-color: #000000; color: #83F52C;
 }
 .onoffswitch-inner:after {
-    content: "BW";
-    padding-right: 8px;
+    content: "Norm";
+    padding-right: 3px;
     background-color: #FFFFFF; color: #000000;
     text-align: right;
 }
@@ -87,4 +87,8 @@ div {
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
+}
+.row {
+	margin-left: 0;
+	margin-right: 0;
 }

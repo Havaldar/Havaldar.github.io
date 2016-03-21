@@ -11,73 +11,78 @@
         <link rel="icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body ng-controller='MainCtrl'>
-        <div class="row">
-            <div class='col-md-1'>
-                <div class="onoffswitch" style="margin: 0 auto; margin-top: 50%;">
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
-                    <label class="onoffswitch-label" for="myonoffswitch">
-                        <span class="onoffswitch-inner"></span>
-                        <span class="onoffswitch-switch"></span>
-                    </label>
-                </div>
-            </div> 
-            <h1 style="text-align: center; margin-top:3%;" class="col-md-9">Abhinav A.K.A. That Guy That Loves Chocolate Milk</h1>
-            <div class="col-md-2" id="bulb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<light><ray7></ray7><br>
-                &nbsp;&nbsp;&nbsp;<ray6>&nbsp;</ray6>.-.<ray5></ray5><br>
-                &nbsp;<ray1>&nbsp;&nbsp;</ray1>(&nbsp;&nbsp;&nbsp;)<ray4></ray4><br>
-                &nbsp;&nbsp;&nbsp;<ray2>&nbsp;</ray2>\&nbsp;/<ray3></ray3></light><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;|=|
-            </div>
-        </div>
-        <hr>
-        <div>
-            <div class="col-md-8">
-                <div class="col-md-12">
-                    <div class="row col-md-12" id="intro" style="margin-bottom: 10px;">
-                        Abhinav >> 
+        <div ng-show='terminal'>
+            <div class="row">
+                <div class='col-md-1'>
+                    <div class="onoffswitch" style="margin: 0 auto; margin-top: 50%;">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+                        <label class="onoffswitch-label" for="myonoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
                     </div>
-                    <div ng-bind-html='trust(commands)' class="row col-md-12">
+                </div> 
+                <h1 style="text-align: center; margin-top:3%;" class="col-md-9">Abhinav A.K.A. That Guy That Loves Chocolate Milk</h1>
+                <div class="col-md-2" id="bulb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<light><ray7></ray7><br>
+                    &nbsp;&nbsp;&nbsp;<ray6>&nbsp;</ray6>.-.<ray5></ray5><br>
+                    &nbsp;<ray1>&nbsp;&nbsp;</ray1>(&nbsp;&nbsp;&nbsp;)<ray4></ray4><br>
+                    &nbsp;&nbsp;&nbsp;<ray2>&nbsp;</ray2>\&nbsp;/<ray3></ray3></light><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;|=|
+                </div>
+            </div>
+            <hr>
+            <div>
+                <div class="col-md-8">
+                    <div class="col-md-12">
+                        <div class="row col-md-12" id="intro" style="margin-bottom: 10px;">
+                            Abhinav >> 
+                        </div>
+                        <div ng-bind-html='trust(commands)' class="row col-md-12">
+                            
+                        </div>
+                        <div class="row col-md-12">
+                            <form ng-submit="enter_command(current_command)">
+                                <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off" width='85%' ng-keydown="autocomplete($event, current_command)"></input>
+                            </form>
+                            {{ev}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 click" style="height: 5000px;">
                         
                     </div>
-                    <div class="row col-md-12">
-                        <form ng-submit="enter_command(current_command)">
-                            <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off"></input>
-                        </form>
+                </div>
+                <div class="col-md-4" id="me">
+                    <div class="form-group">
+                        <label for="name" class="col-md-3">Name:</label>
+                        <input type="name" class="form-control col-md-9" id="name" placeholder="Your Name" ng-model='guest' class="col-md-8" maxlength="10">
                     </div>
-                </div>
-                <div class="col-md-12 click" style="height: 5000px;">
-                    
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;<eye>o</eye>\&nbsp;&nbsp;<light1>&nbsp;</light1>/|&nbsp;|'-.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.\__/&nbsp;&nbsp;<light2>&nbsp;</light2>||&nbsp;|&nbsp;&nbsp;&nbsp;|<--Abhinav<br>
+                    &nbsp;&nbsp;&nbsp;_&nbsp;/&nbsp;&nbsp;`._&nbsp;&nbsp;<light3>&nbsp;</light3>\|_|_.-'&nbsp;&nbsp;&nbsp;working<br>
+                    &nbsp;&nbsp;|&nbsp;/&nbsp;&nbsp;\__.<finger>-</finger>&nbsp;&nbsp;&nbsp;._)&nbsp;(_&nbsp;&nbsp;&nbsp;&nbsp;hard at<br>
+                    &nbsp;&nbsp;|/&nbsp;._/&nbsp;&nbsp;|"""""""""|&nbsp;&nbsp;&nbsp;&nbsp;this site.<br>
+                    &nbsp;&nbsp;|'.&nbsp;&nbsp;`\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                    &nbsp;&nbsp;&nbsp;"""/&nbsp;/&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                    &nbsp;&nbsp;&nbsp;)&nbsp;/_/|&nbsp;|.-------.|<br>
+                    &nbsp;&nbsp;'&nbsp;&nbsp;`-`'&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<br>
+                    <br>   
+                    INSTRUCTIONS:<br>
+                    -------------<br> 
+                    <hi>clear</hi>: This will clear the screen for you.<br><br>
+                    <hi>ls</hi>: This will give you a list of all the directories and files in the working directory.<br><br> 
+                    <hi>cd</hi>: directory_name: This will change directory such that you will be in your specified directory.<br> <br> 
+                    <hi>cd ..</hi>: Use this command to go back one directory.<br><br> 
+                    <hi>cd</hi>: By typing just cd you will go to the root directory.<br><br>  
+                    <hi>pwd</hi>: This command will tell you the current directory you are in.<br><br> 
+                    <hi>cat text_file</hi>: cat will print out the contents of the specified text file. Please just use it with files with a .txt extention. You can also print many files at a time simply by seperating them with spaces.<br><br>
+                    <hi>open file_name</hi>: open will open the specified file in your program of preference (i.e. this website). Use this with .file extentions. This is limited to one file at a time.
                 </div>
             </div>
-            <div class="col-md-4" id="me">
-                <div class="form-group">
-                    <label for="name" class="col-md-3">Name:</label>
-                    <input type="name" class="form-control col-md-9" id="name" placeholder="Your Name" ng-model='guest' class="col-md-8">
-                </div>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;__<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;<eye>o</eye>\<light1>&nbsp;</light1>/|&nbsp;|'-.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.\__/<light2>&nbsp;</light2>||&nbsp;|&nbsp;&nbsp;&nbsp;|<--Abhinav working<br>
-                &nbsp;&nbsp;&nbsp;_&nbsp;/&nbsp;&nbsp;`._<light3>&nbsp;</light3>\|_|_.-'&nbsp;&nbsp;&nbsp;hard at this.<br>
-                &nbsp;&nbsp;|&nbsp;/&nbsp;&nbsp;\__.<finger>-</finger>&nbsp;._)&nbsp;(_&nbsp;&nbsp;&nbsp;&nbsp;site<br>
-                &nbsp;&nbsp;|/&nbsp;._/&nbsp;&nbsp;|"""""""""|<br>
-                &nbsp;&nbsp;|'.&nbsp;&nbsp;`\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-                &nbsp;&nbsp;&nbsp;"""/&nbsp;/&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-                &nbsp;&nbsp;&nbsp;)&nbsp;/_/|&nbsp;|.-------.|<br>
-                &nbsp;&nbsp;'&nbsp;&nbsp;`-`'&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<br>
-                <br>    
-                INSTRUCTIONS:<br>
-                -------------<br> 
-                <hi>clear</hi>: This will clear the screen for you.<br><br>
-                <hi>ls</hi>: This will give you a list of all the directories and files in the working directory.<br><br> 
-                <hi>cd</hi>: directory_name: This will change directory such that you will be in your specified directory.<br> <br> 
-                <hi>cd ..</hi>: Use this command to go back one directory.<br><br> 
-                <hi>cd</hi>: By typing just cd you will go to the root directory.<br><br>  
-                <hi>pwd</hi>: This command will tell you the current directory you are in.<br><br> 
-                <hi>cat text_file</hi>: cat will print out the contents of the specified text file. Please just use it with files with a .txt extention. You can also print many files at a time simply by seperating them with spaces.<br><br>
-                <hi>open file_name</hi>: open will open the specified file in your program of preference (i.e. this website). Use this with .file extentions. This is limited to one file at a time.
-
-            </div>
+        </div>
+        <div ng-show='simple'>
+            basic
         </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
@@ -112,9 +117,9 @@
                 $('light2').html('-');
                 $('light3').html('/');
                 setTimeout(function(){
-                    $('light1').html('&nbsp');
-                    $('light2').html('&nbsp');
-                    $('light3').html('&nbsp');
+                    $('light1').html('&nbsp;');
+                    $('light2').html('&nbsp;');
+                    $('light3').html('&nbsp;');
                 }, 400);
             },800)
             window.setInterval(function() {
@@ -146,7 +151,7 @@
                 }, 400);
             },800);
             $(document).ready(function() {
-                var text = "Welcome, my name is Abhinav Havaldar. I am currently a sophomore at NYU studying computer science and mathematics. I am an aspiring software developer and data scientist. This is a command line to my life. It uses basic linux commands just like me. For more Instructions on commands look to the left.";
+                var text = "Welcome, my name is Abhinav Havaldar. I am currently a sophomore at NYU studying computer science and mathematics. I am an aspiring software developer and data scientist. This is a command line to my life. It uses basic linux commands just like me. For more Instructions on commands look to the right.";
                 var i = 0;
                 window.setInterval(function() {
                     $('#intro').append(text.charAt(i));
@@ -179,7 +184,9 @@
                     $('#name').css('color', '');
                     $('#bulb').css('color', '');
                 }
-
+            });
+            $('#name').click(function(e) {
+                console.log(e);
             });
         </script>
     </body>
