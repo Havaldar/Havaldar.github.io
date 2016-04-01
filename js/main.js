@@ -16,12 +16,15 @@ app.controller('MainCtrl', function($scope, $sce) {
 	];
 	keys = [];
 	audio = new Audio('music.mp3');
+	audio1 = new Audio('music1.mp3');
 	konami = [38,38,40,40,37,39,37,39,66,65];
 	$scope.autocomplete = function(e, current_command) {
 		var keyCode = e["keyCode"]; 
 		if(keyCode === 67 && e["ctrlKey"]) {
 			audio.pause();
 			audio.currentTime = 0;
+			audio1.pause();
+			audio1.currentTime = 0;
 		}
 		if(keys.length >= 10) {
 			keys.splice(0, 1);
@@ -36,8 +39,12 @@ app.controller('MainCtrl', function($scope, $sce) {
 		if (keys.length !== 10) {
 			all = false;
 		}
+		var r = Math.random();
 		if (all) {
-			audio.play();
+			if(r > 0.5)
+				audio.play();
+			else
+				audio1.play();
 		}
 		if (keyCode == 9) {
 			e.preventDefault();
