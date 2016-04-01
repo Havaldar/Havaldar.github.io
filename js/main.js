@@ -19,6 +19,10 @@ app.controller('MainCtrl', function($scope, $sce) {
 	konami = [38,38,40,40,37,39,37,39,66,65];
 	$scope.autocomplete = function(e, current_command) {
 		var keyCode = e["keyCode"]; 
+		if(keyCode === 67 && e["ctrlKey"]) {
+			audio.pause();
+			audio.currentTime = 0;
+		}
 		if(keys.length >= 10) {
 			keys.splice(0, 1);
 		}
