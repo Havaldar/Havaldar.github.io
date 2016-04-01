@@ -14,30 +14,27 @@ app.controller('MainCtrl', function($scope, $sce) {
 		"cat",
 		"pwd"
 	];
-	// function get_potential_commands(command) {
-	// 	var commands = command.trim().split(" ");
-	// 	if(commands.length > 1) {
-
-	// 	} else if(commands.length == 1) {
-	// 		var exp = commands[0];
-	// 		var re = new RegExp(exp);
-	// 		var result = [];
-	// 		for(var i  : $scope.possible_commands) {
-	// 			if(i.search() > 0)	
-	// 				result.push(i);
-	// 		}
-	// 		if (result.length === 1) {
-	// 			return command + result[0];
-	// 		}
-	// 		else {
-	// 			return command;
-	// 		}
-	// 	} else {
-	// 		return command;
-	// 	}
-	// };
+	keys = [];
+	audio = new Audio('music.mp3');
+	konami = [38,38,40,40,37,39,37,39,66,65];
 	$scope.autocomplete = function(e, current_command) {
 		var keyCode = e["keyCode"]; 
+		if(keys.length >= 10) {
+			keys.splice(0, 1);
+		}
+		all = true;
+		keys.push(keyCode);
+		for(var i = 0; i < keys.length; i++) {
+			if(konami[i] !== keys[i]) {
+				all = false;
+			}
+		}
+		if (keys.length !== 10) {
+			all = false;
+		}
+		if (all) {
+			audio.play();
+		}
 		if (keyCode == 9) {
 			e.preventDefault();
 			var searchterms = current_command.trim().split(" ",2);
