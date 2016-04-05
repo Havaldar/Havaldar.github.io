@@ -45,6 +45,8 @@ app.controller('MainCtrl', function($scope, $sce) {
 				audio.play();
 			else
 				audio1.play();
+
+			$scope.commands += "<br><img src='ascii-1060.gif' width='400px'/><br>"
 		}
 		if (keyCode == 9) {
 			e.preventDefault();
