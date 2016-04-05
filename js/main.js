@@ -39,13 +39,8 @@ app.controller('MainCtrl', function($scope, $sce) {
 		if (keys.length !== 10) {
 			all = false;
 		}
-		var r = Math.random();
 		if (all) {
-			if(r > 0.5)
-				audio.play();
-			else
-				audio1.play();
-
+			audio.play();
 			$scope.commands += "<br><img src='ascii-1060.gif' width='400px'/><br>"
 		}
 		if (keyCode == 9) {
