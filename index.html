@@ -15,7 +15,7 @@
             <div class="row">
                 <div class='col-md-1'>
                     <div class="onoffswitch" style="margin: 0 auto; margin-top: 50%;">
-                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" focus>
                         <label class="onoffswitch-label" for="myonoffswitch">
                             <span class="onoffswitch-inner"></span>
                             <span class="onoffswitch-switch"></span>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="row col-md-12">
                             <form ng-submit="enter_command(current_command)">
-                                <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off" width='85%' ng-keydown="autocomplete($event, current_command)"></input>
+                                <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off" width='85%' ng-keydown="autocomplete($event, current_command)" autofocus="on"></input>
                             </form>
                             {{ev}}
                         </div>
@@ -170,6 +170,9 @@
                     $('hr').css('border','dashed 1px #83F52C');
                     $('#name').css('color', '#83F52C');
                     $('#bulb').css('color', 'white');
+                    
+                    $('img').css('-webkit-filter','invert(1)');
+                    $('img').css('filter','invert(1)');
                 }
                 else {
                     $('body').css('color','');
@@ -181,11 +184,14 @@
                     $('hr').css('border','');
                     $('#name').css('color', '');
                     $('#bulb').css('color', '');
+                    $('img').css('-webkit-filter','');
+                    $('img').css('filter','');
                 }
             });
             $('#name').click(function(e) {
                 console.log(e);
             });
+            $("#command").focus();
         </script>
     </body>
 </html>
