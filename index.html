@@ -11,7 +11,7 @@
         <link rel="icon" href="favicon.ico" type="image/x-icon">
     </head>
     <body ng-controller='MainCtrl'>
-        <div ng-show='terminal' ng-cloak>
+        <div>
             <div class="row">
                 <div class='col-md-1'>
                     <div class="onoffswitch" style="margin: 0 auto; margin-top: 50%;">
@@ -44,7 +44,6 @@
                             <form ng-submit="enter_command(current_command)">
                                 <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off" width='85%' ng-keydown="autocomplete($event, current_command)" autofocus="on"></input>
                             </form>
-                            {{ev}}
                         </div>
                     </div>
                     <div class="col-md-12 click" style="height: 5000px;">
@@ -87,6 +86,7 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/controllers/main-ctrl.js"></script>
         <script type="text/javascript">
             var isOn = false;
             $('.click').click(function() {
