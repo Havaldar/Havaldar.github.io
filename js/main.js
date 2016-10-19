@@ -1,5 +1,49 @@
 var app = angular.module("Terminal",[]);
 app.controller('MainCtrl', function($scope, $sce) {
+	var commands = {
+		'cd': function(dests) {
+			var files = $scope.files;
+			for (var i = 0; i < dests.length; i++) {
+				if (dest === ".." || dest == '.') {
+					files = files[dest];
+				}
+				else if (files[dest] !== undefined) {
+					const tmp = files;
+					files = tmp[dest];
+					files['.'] = files;
+					files['..'] = tmp;
+				}
+				else {
+					return "Nah that doesn't seem to exist!";
+				}
+			}
+			$scope.files = files;
+			return "";
+		},
+		'ls': function(dests) {
+			var temp = $scope.files;
+			for (var i = 0; i < dests.length; i++) {
+	 			if (temp[dests[i]] !== undefined) {
+	 				temp = temp[dests[i]];
+	 			}
+	 			else {
+	 				return "Nope not a file!"
+	 			}
+			}
+			var buffer = "";
+			for (name in $scope.files) {
+				buffer += name + "&nbsp&nbsp&nbsp";
+			}
+			return buffer;
+		},
+		'clear': ,
+		'open': ,
+		'cat': ,
+		'pwd': ,
+	}
+
+
+
 	$scope.terminal = true;
 	$scope.simple = false;
 	$scope.switch = function() {
@@ -229,10 +273,6 @@ app.controller('MainCtrl', function($scope, $sce) {
 			} else {
 
 			}
-		} else if (command.substring(0,7).trim() === "switch") {
-			$scope.terminal = false;
-			$scope.simple = true;
-
 		} else {
 			$scope.commands += "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>";
 		}
