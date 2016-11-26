@@ -1,30 +1,162 @@
 var app = angular.module("Terminal",[]);
 app.controller('MainCtrl', function($scope, $sce) {
+	var files = {
+		'abhinav': {
+			'about_me.txt': "My name is Abhinav Havaldar. I am currently a student at NYU studying Math and Computer Science. I am from Bombay but currently live in New York.",
+			'contact_me.txt': 'Cell Phone Number: <b>(917)-769-4595</b><br>Address: <b>80 Lafayette St. New York 10013</b>',
+			'projects': {
+				'baron_up.txt' : '<h2><a href="https://www.baronup.com">Baron Up</a></h2><p>Description: Developed website that provides statistical insights for League of Legends players using the Riot Games API<br>Built and launched beta version of toolkit app using Ruby on Rails with AngularJS and PostgreSQL<br>Currently iterating based on user feedback</p>',
+
+				'parsely.txt' : '<h2><a href="https://github.com/Havaldar/parsely">Parsely</a></h2><p>Description: I created this command line tool for ReactJS users in Python and Ruby to track their component hierarchy. This is meant to be  developer tool that helps users with large quantities of react files to weed through components.</p>',
+
+				'characterize.txt' : '<h2><a href="https://github.com/Havaldar/Characterize">Characterize</a></h2><p>Description: This is a command line tool that is aimed at helping people sort through images they have lost track off. It prints an ascii represntation of the image so users do not need to leave the terminal to see the image they are dealing with.</p>',
+
+				'emoetion.txt' : '<h2><a href="">Emoetion</a></h2><p>Description: As an anime fan I have always wanted to know which anime are worth watching before anyone else. Therefore I made this classifier that uses reddit discussions to classify how good an anime is using a maximum entropy model that used myanimelist.com critiques as a training data set.</p>',
+
+				'cowl.txt': '<h2><a href="">C.O.W.L.</a></h2><p>Description: Used the Marvel comics social graph to find communities of heroes by using the Louvain clustering method. Calculated the eigenvalue centrality in order to find the most influential heroes in each community.</p>',
+
+				'geddit': '<h2><a href="">Geddit</a></h2><p>Description: A chrome extention that opens up every reddit article on a page in a preview mode such that you do not need to keep clicking and opening new tabs.</p>',
+
+				'jakartascript': '<h2>Jakarta Script</h2><p>Description: A js interpreter made in scala, thatenforces a strongly typed version of node.js without dynamic typing etc. but permits more flexible arguement passing modes like passing by name, reference and variables.</p>'
+			},
+			'volunteer': {
+				'makethon_of_kindness.txt': '<h2><a href="http://www.makerthonofkindness.org/">Makethon of Kindness (Organizer)</a></h2><p>Description: Developed website, advertised, and helped in basic logistics of hackerthon to encourage civic hacking for middle school children as part of the core team of organizers.</p>',
+
+				'sneha.txt': '<h2><a href="http://www.snehamumbai.org/">Society for Nutrition, Education, and Health Action (SNEHA)</a></h2><p>Description: Analyzed donation trends across the past decade to identify and develop solution for increasing donor retention. Designed online database website using Ruby on Rails and PostgreSQL</p>',
+
+				'facebook.txt': '<h2>Facebook (Techstart)</h2><p>Description: Taught weekly lessons on computer science to high schoolers to encourage greater involvement in tech.</p>',
+
+				'gamejam.txt': '<h2><a href="http://gamejam.techatnyu.org">Gamejam (Organizer)</a></h2><p>organized a 100 person games hackerthon in New York city, sponsored by several large game companies.</p>'
+			},
+			'experience': {
+				'kamcord.txt': '<h2><a href="https://www.kamcord.com/">Kamcord Backend Intern</a></h2><p>Description: Encoded live video streams using a Java backend and AWS. Worked with thumbnail builders to make web scrub bar for videos on demand. Developed a system for permissions, rate limiting, and securities reducing backend vulnerabilities.</p>',
+
+				'microsoft.txt': '<h2>Microsoft Student Partner</h2><p>Hosted workshops, hackerthons, and demos on campus to evangelize Microsoft technologies.</p>',
+
+				'ixperience.txt': '<h2><a href="http://ixperience.co.za/">IXperience Web Developer Intern</a></h2><p>Description: Assisted in developing alumni platform website and responsible for backend development of platform <br> Worked with Type Form API in order to improve how potential client data is stored</p>',
+
+				'grader.txt' : '<h2>Grader, Introduction to Computer Science</h2><p>Description: Graded papers and analyzed homework projects as a grader for Computer Science 101.</p>',
+				
+			},
+			'interests': {
+				'anime_manga.txt': '<h2>Anime and Manga</h2><p>Description: I love watching anime and reading manga. In fact, I spent a summer in Japan studying animation techniques and Japanese Languag at the Yoyogi Animation Gakkuin. I plan on studying Japanese through college and hope I have the oppertunity to visit again.</p>',
+
+				'football.txt': '<h2>Football</h2><p>Description: I enjoy playing and watchin football (soccer). Currently, I play intramural soccer and bach home I represented my highschool.</p>',
+
+				'chocolate_milk.txt': '<h2>Chocolate Milk</h2><p>Descriptioin: As the name of this site implies, I really do love chocolate milk. I drink about 2 cups of hot chocolate a day and have written blog posts on the best chocolate milks from around New York City.</p>',
+
+				'shaleila.txt': "<p>Lol don't bother</p>"
+			}
+		}
+	};
+	$scope.guest = "guest";
+	$scope.commands = "";
+	$scope.current_command = "";
+	$scope.current_dir = $scope.files;
+	var root_file = files;
+	var history = [];
+	var history_pointer = 0;
 	$scope.terminal = true;
 	$scope.simple = false;
+	var keys = [];
+	var audio = new Audio('music.mp3');
+	var konami = [38,38,40,40,37,39,37,39,66,65];
+	var path = [];
+
+	const commands = {
+		'cd': function(args) {
+			var files_copy = files;
+			var path_temp = path;
+			if (args.length == 0) {
+				path = [];
+				files = root_file; return '';
+			}
+			const dests = args[0].split('/');
+			for (var i = 0; i < dests.length; i++) {
+				var dest = dests[i];
+				if (dest === ".." || dest == '.') {
+					if (dest === '..') path_temp.pop();
+					files_copy = files_copy[dest];
+				}
+				else if (files_copy[dest] !== undefined) {
+					path_temp.push(dest);
+					const tmp = files_copy;
+					files_copy = tmp[dest];
+					files_copy['.'] = files_copy;
+					files_copy['..'] = tmp;
+				}
+				else {
+					return "" + dest + " is not a folder. <br />";
+				}
+			}
+			path = path_temp;
+			files = files_copy;
+			return "";
+		},
+		'ls': function(args) {
+			var temp = files;
+			if (args.length != 0) {
+				const dests = args[0].split('/');
+				for (var i = 0; i < dests.length; i++) {
+					var dest = dests[i];
+		 			if (temp[dest] !== undefined) {
+		 				temp = temp[dest];
+		 			}
+		 			else {
+		 				return "Nope not a folder! <br />"
+		 			}
+				}
+			}
+			return Object.keys(temp).reduce(function(acc, curr_val, curr_i) {
+				return acc + (curr_val[0] !== '.' ? curr_val + "&nbsp&nbsp&nbsp" : '');
+			}, "") + "<br />";
+		},
+		'clear': function() {
+			$scope.commands = ""
+			return '';
+		},
+		'cat': function(args) {
+			var temp = files;
+			if (args.length != 0) {
+				const dests = args[0].split('/');
+				for (var i = 0; i < dests.length - 1; i++) {
+					var dest = dests[i];
+		 			if (temp[dest] !== undefined) {
+		 				temp = temp[dest];
+		 			}
+		 			else {
+		 				return "Nope not a folder! <br />"
+		 			}
+				}
+				return temp[dests.pop()] + "<br />";
+			}
+			return "";
+		},
+		'pwd': function() {
+			return path.reduce(function(acc, val, i) {
+				return acc + '/' + val;
+			}, '') + '<br />';
+		}
+	};
+
 	$scope.switch = function() {
 		$scope.simple = true;
 		$scope.terminal = false;
 	};
-	var possible_commands = [
-		"clear",
-		"ls",
-		"cd",
-		"open",
-		"cat",
-		"pwd"
-	];
-	keys = [];
-	audio = new Audio('music.mp3');
-	audio1 = new Audio('music1.mp3');
-	konami = [38,38,40,40,37,39,37,39,66,65];
+
 	$scope.autocomplete = function(e, current_command) {
-		var keyCode = e["keyCode"]; 
+		var keyCode = e["keyCode"];
+		if (keyCode === 38) {
+			history_pointer = history_pointer <= 0 ? 0 : history_pointer - 1;
+			$scope.current_command = history[history_pointer];
+		}
+		if (keyCode === 40) {
+			history_pointer = history_pointer >= history.length ? history.length : history_pointer + 1;
+			$scope.current_command = history[history_pointer];
+		}
 		if(keyCode === 67 && e["ctrlKey"]) {
 			audio.pause();
 			audio.currentTime = 0;
-			audio1.pause();
-			audio1.currentTime = 0;
 		}
 		if(keys.length >= 10) {
 			keys.splice(0, 1);
@@ -45,197 +177,38 @@ app.controller('MainCtrl', function($scope, $sce) {
 		}
 		if (keyCode == 9) {
 			e.preventDefault();
-			var searchterms = current_command.trim().split(" ",2);
-			if(searchterms[0] !== "") {
-				if(searchterms.length > 1) {
-					var files = Object.keys($scope.current_dir);
-					var result = [];
-					for (var i = 0; i < files.length; i++) {
-						if (searchterms[1].slice(0,files[i].length-1) === searchterms[1])
-							result.push(files[i]);
+			const path = $scope.current_command.trim().split(' ').pop();
+			const del_path = path.split('/');
+			const term = del_path[del_path.length - 1];
+			var temp = files;
+			for (var i = 0; i < del_path.length - 1; i++) {
+				if (temp[del_path[i]] === undefined) break;
+				else temp = temp[del_path[i]];
+			}
+			const f = Object.keys(temp);
+			if (term.length > 0) {
+				const possible = f.reduce(function(acc, val, i) {
+					if (val.length > term.length && val.substring(0, term.length) === term) {
+						acc.push(val.substring(term.length, val.length));
 					}
-					if (result.length === 1) {
-						console.log(result[0]);
-					}
-				}
-				else {
-					console.log(1)
-					var result = [];
+					return acc;
+				}, []);
+				if (possible.length === 1) $scope.current_command += possible[0];
+			}
+		}
+	};
 
-					for(var i in possible_commands) {
-						if(possible_commands[i].slice(0, searchterms[0].length) === searchterms[0]) 
-							result.push(possible_commands[i]);
-					}	
-					if(result.length === 1) {
-						$scope.current_command = result[0];
-					}
-				}
-			}
-		}
-	};
-	$scope.guest = "guest";
-	$scope.commands = "";
-	$scope.current_command = "";
-	$scope.path = [];
-	$scope.files = {
-		'.is_root': true,
-		'.is_dir': true,
-		'abhinav': {	
-			'.is_dir': true,
-			'about_me.txt': "My name is Abhinav Havaldar. I am currently a student at NYU studying Math and Computer Science. I am from Bombay but currently live in New York.",
-			'contact_me.txt': 'Cell Phone Number: <b>(917)-769-4595</b><br>Address: <b>80 Lafayette St. New York 10013</b>',
-			'projects.dir': {
-				'.is_dir': true,
-				'baron_up.file' : {
-					'title': 'Baron Up', 
-					'img': '&nbsp;&nbsp;&nbsp;&nbsp;____&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;__<br>&nbsp;&nbsp;&nbsp;\/&nbsp;__&nbsp;)____&nbsp;__________&nbsp;&nbsp;____&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\/&nbsp;\/&nbsp;\/&nbsp;\/___<br>&nbsp;&nbsp;\/&nbsp;__&nbsp;&nbsp;\/&nbsp;__&nbsp;`\/&nbsp;___\/&nbsp;__&nbsp;\\\/&nbsp;__&nbsp;\\&nbsp;&nbsp;&nbsp;\/&nbsp;\/&nbsp;\/&nbsp;\/&nbsp;__&nbsp;\\<br>&nbsp;\/&nbsp;\/_\/&nbsp;\/&nbsp;\/_\/&nbsp;\/&nbsp;\/&nbsp;&nbsp;\/&nbsp;\/_\/&nbsp;\/&nbsp;\/&nbsp;\/&nbsp;\/&nbsp;&nbsp;\/&nbsp;\/_\/&nbsp;\/&nbsp;\/_\/&nbsp;\/<br>\/_____\/\\__,_\/_\/&nbsp;&nbsp;&nbsp;\\____\/_\/&nbsp;\/_\/&nbsp;&nbsp;&nbsp;\\____\/&nbsp;.___\/&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\/_\/<br>&nbsp;&nbsp;&nbsp;&nbsp;',
-					'description': 'Developed website that provides statistical insights for League of Legends players using the Riot Games API<br>Built and launched beta version of toolkit app using Ruby on Rails with AngularJS and PostgreSQL<br>Currently iterating based on user feedback', 
-					'url': "https://www.baronup.com"
-				},
-				'parsely.file' : {
-					'title': 'Parsely',
-					'img': '&nbsp;&nbsp;&nbsp;|<br>&nbsp;.\'|\'.<br>\/.\'|\\&nbsp;\\<br>|&nbsp;\/|\'.|<br>&nbsp;\\&nbsp;|\\\/<br>&nbsp;&nbsp;\\|\/<br>&nbsp;&nbsp;&nbsp;`\'&nbsp;<br>',
-					'description': 'I created this command line tool for ReactJS users in Python and Ruby to track their component hierarchy. This is meant to be  developer tool that helps users with large quantities of react files to weed through components.', 
-					'url': "https://github.com/Havaldar/parsely"
-				},
-				'characterize.file' : {
-					'title': 'Characterize', 
-					'description': 'This is a command line tool that is aimed at helping people sort through images they have lost track off. It prints an ascii represntation of the image so users do not need to leave the terminal to see the image they are dealing with.', 
-					'url': "https://github.com/Havaldar/Characterize",
-					'img': "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;____<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;o8%8888,&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;o88%8888888.&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8\'-&nbsp;&nbsp;&nbsp;&nbsp;-:8888b&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8888&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;d8.-=.&nbsp;,==-.:888b&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;>8&nbsp;`~`&nbsp;:`~\'&nbsp;d8888&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,88888&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;88b.&nbsp;`-~&nbsp;&nbsp;\':88888&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;888b&nbsp;~==~&nbsp;.:88888&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;88888o--:\':::8888&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;`88888|&nbsp;:::\'&nbsp;8888b&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;8888^^\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8888b&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;d888&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,%888b.&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;d88%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%8--\'-.&nbsp;&nbsp;<br>&nbsp;/88:.__&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_%-\'&nbsp;---&nbsp;&nbsp;-&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'\'\'::===..-\'&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;--.&nbsp;&nbsp;`<br>"
-				}
-			},
-			'volunteer.dir': {
-				'.is_dir': true,
-				'makethon_of_kindness.file' : {
-					'title': 'Makethon of Kindness', 
-					'img': "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.-.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.-\"`&nbsp;.`'.&nbsp;&nbsp;&nbsp;&nbsp;\/\\\\|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_(\\-\/)_\"&nbsp;,&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;,\\&nbsp;&nbsp;\/\\\\\\\/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(#b^d#)}&nbsp;.&nbsp;&nbsp;&nbsp;.\/,&nbsp;&nbsp;|\/\\\\\\\/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-.(Y).-`&nbsp;&nbsp;,&nbsp;&nbsp;|&nbsp;&nbsp;,&nbsp;|\\.-`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\/~\/,_\/~~~\\,__.-`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\/\/\/\/~&nbsp;&nbsp;&nbsp;&nbsp;\/\/&nbsp;~\\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;==`==`&nbsp;&nbsp;&nbsp;==`&nbsp;&nbsp;&nbsp;==`<br>",
-					'description': 'Developed website, advertised, and helped in basic logistics of hackerthon to encourage civic hacking for middle school children as part of the core team of organizers ', 
-					'url': "http://www.makerthonofkindness.org/"
-				},
-				'sneha.file' : {
-					'title': 'Society for Nutrition, Education, and Health Action (SNEHA)', 
-					'description': 'Analyzed donation trends across the past decade to identify and develop solution for increasing donor retention <br> Designed online database website using Ruby on Rails and PostgreSQL', 
-					'url': "http://www.snehamumbai.org/"
-				}
-			},
-			'experience.dir': {
-				'ixperience.file' : {
-					'title': 'IXperience Web Developer Intern', 
-					'description': 'Assisted in developing alumni platform website and responsible for backend development of platform <br> Worked with Type Form API in order to improve how potential client data is stored', 
-					'url': "http://ixperience.co.za/",
-					'img': '-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;_..::__:&nbsp;&nbsp;,-"-"._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_,.__<br>&nbsp;&nbsp;&nbsp;_.___&nbsp;_&nbsp;_<_>`!(._`.`-.&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`_&nbsp;,_/&nbsp;&nbsp;\'&nbsp;&nbsp;\'-._.---.-.__<br>>.{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;"&nbsp;`-==,\',._\\{&nbsp;&nbsp;\\&nbsp;&nbsp;/&nbsp;{)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;_&nbsp;">_,-\'&nbsp;`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mt-2_<br>&nbsp;&nbsp;\\_.:--.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._&nbsp;)`^-.&nbsp;"\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;[_/(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__,/-\'<br>&nbsp;\'"\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;_L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oD_,--\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/.&nbsp;(|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)_.\\\\._<>&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_,\'&nbsp;/&nbsp;&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_/_\'`&nbsp;`"(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<\'}&nbsp;&nbsp;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\\\&nbsp;&nbsp;&nbsp;&nbsp;.-.&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;`-\'"..\'&nbsp;`:.#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)&nbsp;&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;(&nbsp;&nbsp;`(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`:\\&nbsp;&nbsp;>&nbsp;\\&nbsp;&nbsp;,-^.&nbsp;&nbsp;/\'&nbsp;\'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._,&nbsp;&nbsp;&nbsp;""&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\`\'&nbsp;&nbsp;&nbsp;\\|&nbsp;&nbsp;&nbsp;?_)&nbsp;&nbsp;{\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`=.---.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`._._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"`&nbsp;&nbsp;|\'&nbsp;,-&nbsp;\'.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;`-._&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`:`<_|h--._<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`=.__.`-\'\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|{|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,-.,\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;,\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;&nbsp;/&nbsp;`\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;/&nbsp;Cape&nbsp;Town-->iX_\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;__&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'-\'&nbsp;&nbsp;`-\'&nbsp;&nbsp;&nbsp;\\.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______._.--._&nbsp;_..---.---------._<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,-----"-..?----_/&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__,-\'"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br>-.._(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-----\'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`-<br>-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----<br>'
-				},
-				'grader.file' : {
-					'title': 'Grader, Introduction to Computer Science', 
-					'description': 'Graded papers and analyzed homework projects as a grader for Computer Science 101.', 
-					'url': "",
-					'img': "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\\/&nbsp;|/\\<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;^&nbsp;&nbsp;&nbsp;|&nbsp;/\\&nbsp;&nbsp;/\\<br>&nbsp;&nbsp;(\\/\\&nbsp;&nbsp;/&nbsp;^&nbsp;&nbsp;&nbsp;/\\/&nbsp;&nbsp;)/^&nbsp;)<br>&nbsp;&nbsp;&nbsp;\\&nbsp;&nbsp;\\/^&nbsp;/\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^&nbsp;&nbsp;/<br>&nbsp;&nbsp;&nbsp;&nbsp;)^&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^&nbsp;\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br>&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;^&nbsp;&nbsp;&nbsp;^&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^\\&nbsp;&nbsp;)<br>&nbsp;&nbsp;&nbsp;&nbsp;\\___\\/____/______/<br>&nbsp;&nbsp;&nbsp;&nbsp;[________________]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//\\\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<<()>>&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N.Y.U.&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\____________/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br>"
-				},
-				'.is_dir': true
-			},
-			'interests.dir': {
-				'.is_dir': true,
-				'anime_manga.file': {
-					'title': 'Anime and Manga',
-					'img':"&nbsp_____<br />\/&nbsp&nbsp&nbsp&nbsp&nbsp\\<br />vvvvvvv&nbsp&nbsp\/|__\/|<br />&nbsp&nbsp&nbspI&nbsp&nbsp&nbsp\/O,O&nbsp&nbsp&nbsp|<br />&nbsp&nbspI&nbsp\/_____&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/|\/|<br />&nbsp&nbspJ|\/^&nbsp^&nbsp^&nbsp\\&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp\/00&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp_\/\/|<br />&nbsp&nbsp&nbsp|^&nbsp^&nbsp^&nbsp^&nbsp|W|&nbsp&nbsp&nbsp|\/^^\\&nbsp|&nbsp&nbsp&nbsp\/oo&nbsp|<br />&nbsp&nbsp&nbsp&nbsp\\m___m__|_|&nbsp&nbsp&nbsp&nbsp\\m_m_|&nbsp&nbsp&nbsp\\mm_|",
-					'description': 'I love watching anime and reading manga. In fact, I spent a summer in Japan studying animation techniques and Japanese Languag at the Yoyogi Animation Gakkuin. I plan on studying Japanese through college and hope I have the oppertunity to visit again.'
-				},
-				'football.file': {
-					'title': 'Football',
-					'img':'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_...----.._<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp,:\':::::.&nbsp&nbsp&nbsp&nbsp&nbsp`>.<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp,\'&nbsp|:::::;\'&nbsp&nbsp&nbsp&nbsp&nbsp|:::.<br>&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp`\'::\'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:::::\\<br>&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_____&nbsp&nbsp&nbsp&nbsp&nbsp`::;\\<br>&nbsp&nbsp&nbsp:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/:::::\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`&nbsp&nbsp:<br>&nbsp&nbsp&nbsp|&nbsp,.&nbsp&nbsp&nbsp&nbsp&nbsp\/:::::::\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp|;:::.&nbsp&nbsp&nbsp`::::::;\'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp::::::&nbsp&nbsp&nbsp&nbsp&nbsp`::;\'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp,.&nbsp&nbsp;<br>&nbsp&nbsp&nbsp&nbsp\\:::\'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp,::::\/<br>&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\:::\/<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`.&nbsp&nbsp&nbsp&nbsp&nbsp,:.&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:;\'<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`-.::::::..&nbsp&nbsp_.\'\'<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp```----\'\'\'',
-					'description': 'I enjoy playing and watchin football (soccer). Currently, I play intramural soccer and bach home I represented my highschool.'
-				},
-				'chocolate_milk.file': {
-					'title': "Chocolate Milk",
-					'img':'&nbsp&nbsp&nbsp_________<br>&nbsp&nbsp|&nbsp_______&nbsp|<br>&nbsp\/&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\<br>\/___\\_________\\<br>|&nbsp&nbsp&nbsp|&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbspM&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|\\&nbsp&nbspI&nbsp&nbsp\\&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp\\&nbsp&nbspL&nbsp&nbsp\\|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbspK&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp|<br>|&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp|<br>|___|_______\\_|',
-					'description': 'As the name of this site implies, I really do love chocolate milk. I drink about 2 cups of hot chocolate a day and have written blog posts on the bet chocolate milks from around New York City.'
-				},
-				'video_games.file': {
-					'title': "Video Games",
-					'img':"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_=====_&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_=====_<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp_____&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp_____&nbsp\\<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+.-\'_____\'-.---------------------------.-\'_____\'-.+<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp\'.&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspA&nbspB&nbspH&nbspI&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp.\'&nbsp&nbsp|&nbsp&nbsp_&nbsp&nbsp|&nbsp&nbsp&nbsp\\<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp___|&nbsp\/|\\&nbsp|___&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp___|&nbsp\/_\\&nbsp|___&nbsp\\<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp;&nbsp&nbsp__&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_&nbsp&nbsp&nbsp;&nbsp|&nbsp_&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_&nbsp|&nbsp;<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp|&nbsp<---&nbsp&nbsp&nbsp--->&nbsp|&nbsp|&nbsp|__|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|_:>&nbsp|&nbsp||_|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(_)|&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp|___&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp___|&nbsp;SELECT&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSTART&nbsp;&nbsp|___&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp___|&nbsp;<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|\\&nbsp&nbsp&nbsp&nbsp|&nbsp\\|\/&nbsp|&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp_&nbsp&nbsp&nbsp&nbsp&nbsp___&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp|&nbsp(X)&nbsp|&nbsp&nbsp&nbsp&nbsp\/|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp\\&nbsp&nbsp&nbsp|_____|&nbsp&nbsp.\',\'\"&nbsp\"\',&nbsp|___|&nbsp&nbsp,\'\"&nbsp\"\',&nbsp\'.&nbsp&nbsp|_____|&nbsp&nbsp.\'&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp\'-.______.-\'&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\ANALOG\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp\'-._____.-\'&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|------|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp\'.___.\'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\'.___.\'&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\________\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\_________\/",
-					'description': ''
-				},
-				'video_games.file': {
-					'title': "Video Games",
-					'img':"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_=====_&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_=====_<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp_____&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp_____&nbsp\\<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+.-\'_____\'-.---------------------------.-\'_____\'-.+<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp\'.&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspA&nbspB&nbspH&nbspI&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp.\'&nbsp&nbsp|&nbsp&nbsp_&nbsp&nbsp|&nbsp&nbsp&nbsp\\<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp___|&nbsp\/|\\&nbsp|___&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp___|&nbsp\/_\\&nbsp|___&nbsp\\<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp;&nbsp&nbsp__&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_&nbsp&nbsp&nbsp;&nbsp|&nbsp_&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_&nbsp|&nbsp;<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp|&nbsp<---&nbsp&nbsp&nbsp--->&nbsp|&nbsp|&nbsp|__|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|_:>&nbsp|&nbsp||_|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(_)|&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp|___&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp___|&nbsp;SELECT&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSTART&nbsp;&nbsp|___&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp___|&nbsp;<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|\\&nbsp&nbsp&nbsp&nbsp|&nbsp\\|\/&nbsp|&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp_&nbsp&nbsp&nbsp&nbsp&nbsp___&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp_&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp|&nbsp(X)&nbsp|&nbsp&nbsp&nbsp&nbsp\/|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp\\&nbsp&nbsp&nbsp|_____|&nbsp&nbsp.\',\'\"&nbsp\"\',&nbsp|___|&nbsp&nbsp,\'\"&nbsp\"\',&nbsp\'.&nbsp&nbsp|_____|&nbsp&nbsp.\'&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp\'-.______.-\'&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\ANALOG\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp\'-._____.-\'&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|------|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp\'.___.\'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\'.___.\'&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\/<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\________\/&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp\\_________\/",
-					'description': ''
-				}			
-			}
-		}
-	};
-	$scope.current_dir = $scope.files;
 	$scope.enter_command = function(command) {
+		history.push(command);
+		history_pointer = history.length;
 		$scope.commands += $scope.guest + " >> " + command + "<br />";
 		$scope.current_command = "";
-		if (command === "clear") {
-			$scope.commands = "";
-		} else if (command === "ls") {
-			for (var key in $scope.current_dir) {
-				if (key.substring(0,1) != '.') {
-					$scope.commands += key + "&nbsp&nbsp&nbsp";
-				}
-			}
-			$scope.commands += "<br />"
-		} else if (command.trim() === "cd") {
-			$scope.current_dir = $scope.files;
-			$scope.path = [];
-		} else if (command.substring(0,3) === "cd ") {
-			var arr = command.substring(3).trim().split('/');
-			for (var i = 0; i < arr.length; i++) {
-				if ($scope.current_dir[arr[i].trim()] != undefined && $scope.current_dir[arr[i].trim()]['.is_dir']) {
-					$scope.current_dir = $scope.current_dir[arr[i].trim()];
-					$scope.path.push(arr[i].trim());
-				} else {
-					var matches = command.match(/\.{2}/g);
-					if (matches.length > 0) {
-						$scope.current_dir = $scope.files;
-						for(var i = 0; i < ($scope.path.length-matches.length);i++) {
-							$scope.current_dir = $scope.current_dir[$scope.path[i]];
-						}
-						for(var i = $scope.path.length-1; i >= ($scope.path.length-matches.length);i--) {
-							$scope.path.pop();
-						}
-					} else {
-						$scope.commands += "Sorry thats not a directory<br />";
-					}
-				}
-			}	
-		} else if (command.substring(0,4).trim() === "cat") {
-			var arr = command.substring(3).trim().split(/[ ,]+/);
-			for (var i in arr) {
-				if ($scope.current_dir[arr[i]] && typeof($scope.current_dir[arr[i]])==='string'){
-					$scope.commands += '<br>' + $scope.current_dir[arr[i]] + "<br><br>";
-				} else {
-					$scope.commands += '<pi style=\"color:#ff0033;margin:0; margin-top: 10px;\">'+arr[i]+' is not a txt file</pi>';
-				}
-			}
-		} else if (command.trim().substring(0,3) === "pwd") {
-			if ($scope.path.length === 0) {
-				$scope.commands += 'root<br>'
-			} else {
-				for(var i = 0; i < $scope.path.length; i++) {
-					$scope.commands += "/" + $scope.path[i];
-				}
-				$scope.commands += "<br>";
-			}
-		} else if (command.trim() == "") {
-
-		} else if (command.substring(0,5).trim() === "open") {
-			var file = command.substring(5).trim();
-			if (file.substring(file.length - 5) === '.file') {
-				$scope.commands += '<br><div class="col-md-6">' + $scope.current_dir[file]['img'] + '</div>';
-				$scope.commands += '<div class="col-md-6"><a target="_blank" href=\"'+$scope.current_dir[file]['url']+'\">'+$scope.current_dir[file]['title']+'</a>'+'<br>'+ $scope.current_dir[file]['description'] + '</div><br><br>';
-			} else {
-
-			}
-		} else if (command.substring(0,7).trim() === "switch") {
-			$scope.terminal = false;
-			$scope.simple = true;
-
-		} else {
-			$scope.commands += "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>";
-		}
+		const comms = command.split("&&");
+		comms.forEach(function(comm) {
+			const del_comm = comm.trim().replace(/  +/g, ' ').split(' ');
+			const message = commands[del_comm[0]](del_comm.slice(1));
+			$scope.commands += message;
+		});
 	};
 	$scope.trust = $sce.trustAsHtml;
 });
