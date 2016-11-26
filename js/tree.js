@@ -7,20 +7,7 @@ var files = {
 		}
 	}
 }
-const cd = function(dest) {
-	if (dest === ".." || dest == '.') {
-		files = files[dest];
-		return true;
-	}
-	else if (files[dest] !== undefined) {
-		const tmp = files;
-		files = tmp[dest];
-		files['.'] = files;
-		files['..'] = tmp;
-		return true;
-	}
-	return false;
-}
+
 
 var pwd = function() {
 	var path = [];
