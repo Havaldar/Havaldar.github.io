@@ -100,7 +100,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				const dests = args[0].split('/');
 				for (var i = 0; i < dests.length; i++) {
 					var dest = dests[i];
-		 			if (temp[dest] !== undefined && files_copy[dest] === 'object') {
+		 			if (temp[dest] !== undefined && typeof temp[dest] === 'object') {
 		 				temp = temp[dest];
 		 			}
 		 			else {
@@ -221,9 +221,10 @@ app.controller('MainCtrl', function($scope, $sce) {
 		const all_comms = Object.keys(commands);
 		comms.forEach(function(comm) {
 			const del_comm = comm.trim().replace(/  +/g, ' ').split(' ');
-			const message = all_comms.indexOf(del_comm[0]) < 0 ? "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p" : commands[del_comm[0]](del_comm.slice(1));
+			const message = all_comms.indexOf(del_comm[0]) < 0 ? "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>" : commands[del_comm[0]](del_comm.slice(1));
 			$scope.commands += message;
 		});
 	};
+
 	$scope.trust = $sce.trustAsHtml;
 });
