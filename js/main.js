@@ -133,7 +133,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				}
 				const file_name = dests.pop();
 				if (temp[file_name] === undefined) return "Yea that doesn't exist sorry! <br />";
-				else if (typeof temp[file_name] === 'string') return temp[dests.pop()] + "<br />";
+				else if (typeof temp[file_name] === 'string') return temp[file_name] + "<br />";
 				else return "Thats not a file! <br />";
 			}
 			return "";
