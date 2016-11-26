@@ -2,7 +2,6 @@ body {
 	background-color: white;
 	font-size: 15pt;
 	font-family: 'Inconsolata';
-	height: 100%;
 	font-weight: 700;
 	line-height: 1;
 }
@@ -15,9 +14,6 @@ input {
 	font-family: 'Inconsolata';
 	width: 85%;
 	font-weight: 700;
-}
-html {
-	height: 100%;
 }
 hr {
 	border-style: dashed;

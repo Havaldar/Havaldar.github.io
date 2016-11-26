@@ -60,6 +60,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 	$scope.simple = false;
 	var keys = [];
 	var audio = new Audio('music.mp3');
+	var err = new Audio('err.mp3');
 	var konami = [38,38,40,40,37,39,37,39,66,65];
 	var path = [];
 
@@ -78,7 +79,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 					if (dest === '..') path_temp.pop();
 					files_copy = files_copy[dest];
 				}
-				else if (files_copy[dest] !== undefined) {
+				else if (files_copy[dest] !== undefined && typeof files_copy[dest] === 'object') {
 					path_temp.push(dest);
 					const tmp = files_copy;
 					files_copy = tmp[dest];
@@ -99,7 +100,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				const dests = args[0].split('/');
 				for (var i = 0; i < dests.length; i++) {
 					var dest = dests[i];
-		 			if (temp[dest] !== undefined) {
+		 			if (temp[dest] !== undefined && files_copy[dest] === 'object') {
 		 				temp = temp[dest];
 		 			}
 		 			else {
@@ -108,7 +109,9 @@ app.controller('MainCtrl', function($scope, $sce) {
 				}
 			}
 			return Object.keys(temp).reduce(function(acc, curr_val, curr_i) {
-				return acc + (curr_val[0] !== '.' ? curr_val + "&nbsp&nbsp&nbsp" : '');
+				if (curr_val[0] === '.') return acc;
+				else if (typeof temp[curr_val] === 'object') return acc + curr_val + "/&nbsp&nbsp&nbsp";
+				else return acc + curr_val + "&nbsp&nbsp&nbsp";
 			}, "") + "<br />";
 		},
 		'clear': function() {
@@ -136,7 +139,15 @@ app.controller('MainCtrl', function($scope, $sce) {
 			return path.reduce(function(acc, val, i) {
 				return acc + '/' + val;
 			}, '') + '<br />';
-		}
+		},
+		'vim': function() { 
+			err.play();
+			return 'Yea I feel your pain as a fellow vim guy.<br />';
+		},
+		'emacs': function() {
+			return 'Rethink your life descisions, cool? now use vim.<br />';
+		},
+		'whoami': function() { return "Good question. You think you are " + $scope.guest + ", but who really knows." }
 	};
 
 	$scope.switch = function() {
@@ -204,9 +215,10 @@ app.controller('MainCtrl', function($scope, $sce) {
 		$scope.commands += $scope.guest + " >> " + command + "<br />";
 		$scope.current_command = "";
 		const comms = command.split("&&");
+		const all_comms = Object.keys(commands);
 		comms.forEach(function(comm) {
 			const del_comm = comm.trim().replace(/  +/g, ' ').split(' ');
-			const message = commands[del_comm[0]](del_comm.slice(1));
+			const message = all_comms.indexOf(del_comm[0]) < 0 ? '<c style="color: red">Yea so I made this in my OS class cause I got bored so no fancy commands sorry.</c>' : commands[del_comm[0]](del_comm.slice(1));
 			$scope.commands += message;
 		});
 	};
