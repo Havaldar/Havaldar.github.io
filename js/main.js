@@ -15,9 +15,9 @@ app.controller('MainCtrl', function($scope, $sce) {
 
 				'cowl.txt': '<h2><a href="">C.O.W.L.</a></h2><p>Description: Used the Marvel comics social graph to find communities of heroes by using the Louvain clustering method. Calculated the eigenvalue centrality in order to find the most influential heroes in each community.</p>',
 
-				'geddit': '<h2><a href="">Geddit</a></h2><p>Description: A chrome extention that opens up every reddit article on a page in a preview mode such that you do not need to keep clicking and opening new tabs.</p>',
+				'geddit.txt': '<h2><a href="">Geddit</a></h2><p>Description: A chrome extention that opens up every reddit article on a page in a preview mode such that you do not need to keep clicking and opening new tabs.</p>',
 
-				'jakartascript': '<h2>Jakarta Script</h2><p>Description: A js interpreter made in scala, thatenforces a strongly typed version of node.js without dynamic typing etc. but permits more flexible arguement passing modes like passing by name, reference and variables.</p>'
+				'jakartascript.txt': '<h2>Jakarta Script</h2><p>Description: A js interpreter made in scala, thatenforces a strongly typed version of node.js without dynamic typing etc. but permits more flexible arguement passing modes like passing by name, reference and variables.</p>'
 			},
 			'volunteer': {
 				'makethon_of_kindness.txt': '<h2><a href="http://www.makerthonofkindness.org/">Makethon of Kindness (Organizer)</a></h2><p>Description: Developed website, advertised, and helped in basic logistics of hackerthon to encourage civic hacking for middle school children as part of the core team of organizers.</p>',
@@ -131,7 +131,10 @@ app.controller('MainCtrl', function($scope, $sce) {
 		 				return "Nope not a folder! <br />"
 		 			}
 				}
-				return temp[dests.pop()] + "<br />";
+				const file_name = dests.pop();
+				if (temp[file_name] === undefined) return "Yea that doesn't exist sorry! <br />";
+				else if (typeof temp[file_name] === 'string') return temp[dests.pop()] + "<br />";
+				else return return "Thats not a file! <br />";
 			}
 			return "";
 		},
