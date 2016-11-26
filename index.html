@@ -33,6 +33,7 @@
             <hr>
             <div>
                 <div class="col-md-8">
+                    <div class="click" style="position: fixed; height: 100%; width: 66%; z-index: 1000;bottom: 0; left:0"></div>
                     <div class="col-md-12">
                         <div class="row col-md-12" id="intro" style="margin-bottom: 10px;">
                             Abhinav >> 
@@ -42,12 +43,12 @@
                         </div>
                         <div class="row col-md-12">
                             <form ng-submit="enter_command(current_command)">
-                                <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off" width='85%' ng-keydown="autocomplete($event, current_command)" autofocus="on"></input>
+                                <b width='15%'>{{guest}} >> </b> <input ng-model='current_command' id="command" autocomplete="off" width='85%' ng-keydown="autocomplete($event, current_command)" autofocus="on" spellcheck="false"></input>
                             </form>
                             {{ev}}
                         </div>
                     </div>
-                    <div class="col-md-12 click" style="height: 5000px;">
+                    <div class="col-md-12" style="position: absolute; height: 100%;">
                         
                     </div>
                 </div>
@@ -77,8 +78,7 @@
                     <hi>cd ..</hi>: Use this command to go back one directory.<br><br> 
                     <hi>cd</hi>: By typing just cd you will go to the root directory.<br><br>  
                     <hi>pwd</hi>: This command will tell you the current directory you are in.<br><br> 
-                    <hi>cat text_file</hi>: cat will print out the contents of the specified text file. Please just use it with files with a .txt extention. You can also print many files at a time simply by seperating them with spaces.<br><br>
-                    <hi>open file_name</hi>: open will open the specified file in your program of preference (i.e. this website). Use this with .file extentions. This is limited to one file at a time.
+                    <hi>cat text_file</hi>: cat will print out the contents of the specified text file. Please just use it with files with a .txt extention. You can also print many files at a time simply by seperating them with spaces.
                 </div>
             </div>
         </div>
