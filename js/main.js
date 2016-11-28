@@ -146,11 +146,18 @@ app.controller('MainCtrl', function($scope, $sce) {
 			err.play();
 			return 'Yea I feel your pain as a fellow vim guy.<br />';
 		},
+		'vi': function() { 
+			err.play();
+			return 'Yea I feel your pain as a fellow vim guy.<br />';
+		},
 		'emacs': function() {
 			return '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0" frameborder="0"></iframe><br>';
 		},
 		'whoami': function() { 
-			return "Good question. You think you are " + $scope.guest + ", but who really knows." 
+			return "Good question. You think you are " + $scope.guest + ", but who really knows.<br>"; 
+		},
+		'resume': function() {
+
 		}
 	};
 	const explore = function(root) {
