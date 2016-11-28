@@ -154,8 +154,11 @@ app.controller('MainCtrl', function($scope, $sce) {
 			return '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0" frameborder="0"></iframe><br>';
 		},
 		'nano': function() {
-			return '<img src="https://media.giphy.com/media/w6MNHOoLEzBVm/giphy.gif" style="filter: grayscale(100%);">'
+			return '<img src="https://media.giphy.com/media/w6MNHOoLEzBVm/giphy.gif" style="filter: grayscale(100%);"><br>'
 		},
+		'gedit': function() {
+			return 
+		}
 		'whoami': function() { 
 			return "Good question. You think you are " + $scope.guest + ", but who really knows.<br>"; 
 		},
