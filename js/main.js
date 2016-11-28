@@ -63,7 +63,6 @@ app.controller('MainCtrl', function($scope, $sce) {
 	var err = new Audio('err.mp3');
 	var konami = [38,38,40,40,37,39,37,39,66,65];
 	var path = [];
-
 	const commands = {
 		'cd': function(args) {
 			var files_copy = files;
@@ -148,10 +147,15 @@ app.controller('MainCtrl', function($scope, $sce) {
 			return 'Yea I feel your pain as a fellow vim guy.<br />';
 		},
 		'emacs': function() {
-			return 'Rethink your life descisions, cool? now use vim.<br />';
+			return '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allowfullscreen></iframe>';
 		},
-		'whoami': function() { return "Good question. You think you are " + $scope.guest + ", but who really knows." }
+		'whoami': function() { 
+			return "Good question. You think you are " + $scope.guest + ", but who really knows." 
+		}
 	};
+	const explore = function(root) {
+		
+	}
 
 	$scope.switch = function() {
 		$scope.simple = true;
