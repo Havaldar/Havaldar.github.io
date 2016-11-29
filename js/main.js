@@ -61,6 +61,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 	var keys = [];
 	var audio = new Audio('music.mp3');
 	var err = new Audio('err.mp3');
+	var na = new Audio('na.mp3');
 	var konami = [38,38,40,40,37,39,37,39,66,65];
 	var path = [];
 	const commands = {
@@ -163,9 +164,6 @@ app.controller('MainCtrl', function($scope, $sce) {
 			return "<br><p>cd [folder_name] : change directories to a folder. This will not work if a file is given as an arguement.<br>cd .. : go up a level in terms of directories.<br>cd : go to the root directory.<br>ls : show all files and folders in current directory.<br>pwd : show the path to the current working directory.<br>cat [filenames delimited by spaces]: prints out the contents of a file. Please only use this with text files.<br>clear : will clear the console of previous commands.<br>vim or vi : use vim or vi text editors<br>nano : use nano text editor<br>emacs : use emacs text editor<br>&lt up &gt and &lt down &gt : go up and down ur bash history<br>&lt tab &gt : autocomplete file or folder name<br>[command] & [command] : chains commands one after another<br></p>";
 		}
 	};
-	const explore = function(root) {
-		
-	}
 
 	$scope.switch = function() {
 		$scope.simple = true;
@@ -235,7 +233,14 @@ app.controller('MainCtrl', function($scope, $sce) {
 		const all_comms = Object.keys(commands);
 		comms.forEach(function(comm) {
 			const del_comm = comm.trim().replace(/  +/g, ' ').split(' ');
-			const message = all_comms.indexOf(del_comm[0]) < 0 ? "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>" : commands[del_comm[0]](del_comm.slice(1));
+			var message = "";
+			if (all_comms.indexOf(del_comm[0]) < 0) {
+				na.play();
+				message = "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>";
+			}
+			else {
+				message = commands[del_comm[0]](del_comm.slice(1));
+			}
 			$scope.commands += message;
 		});
 	};
