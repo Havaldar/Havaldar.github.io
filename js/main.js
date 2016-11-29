@@ -118,24 +118,24 @@ app.controller('MainCtrl', function($scope, $sce) {
 			return '';
 		},
 		'cat': function(args) {
-			var temp = files;
-			if (args.length != 0) {
-				const dests = args[0].split('/');
+			var buffer = "";
+			return args.reduce(function(acc, val, i) {
+				const dests = val.split('/');
+				var temp = files;
 				for (var i = 0; i < dests.length - 1; i++) {
 					var dest = dests[i];
 		 			if (temp[dest] !== undefined) {
 		 				temp = temp[dest];
 		 			}
 		 			else {
-		 				return "Nope not a folder! <br />"
+		 				return acc + dest + " is not a folder! <br />"
 		 			}
 				}
 				const file_name = dests.pop();
-				if (temp[file_name] === undefined) return "Yea that doesn't exist sorry! <br />";
-				else if (typeof temp[file_name] === 'string') return temp[file_name] + "<br />";
-				else return "Thats not a file! <br />";
-			}
-			return "";
+				if (temp[file_name] === undefined) return acc + file_name + " doesn't exist sorry! <br />";
+				else if (typeof temp[file_name] === 'string') return acc + temp[file_name] + "<br />";
+				else return acc + file_name + " is not a file! <br />";
+			}, "");
 		},
 		'pwd': function() {
 			return path.reduce(function(acc, val, i) {
@@ -151,16 +151,16 @@ app.controller('MainCtrl', function($scope, $sce) {
 			return 'Yea I feel your pain as a fellow vim guy.<br />';
 		},
 		'emacs': function() {
-			return '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0" frameborder="0"></iframe><br>';
+			return 'For all you emacs users out there<br><iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0" frameborder="0"></iframe><br>';
 		},
 		'nano': function() {
-			return '<img src="https://media.giphy.com/media/w6MNHOoLEzBVm/giphy.gif" style="filter: grayscale(100%);"><br>';
+			return 'Why would you use nano<br><img src="https://media.giphy.com/media/w6MNHOoLEzBVm/giphy.gif" style="filter: grayscale(100%);"><br>';
 		},
 		'whoami': function() { 
 			return "Good question. You think you are " + $scope.guest + ", but who really knows.<br>"; 
 		},
-		'resume': function() {
-
+		'help': function() {
+			return "<br><p>cd [folder_name] : change directories to a folder. This will not work if a file is given as an arguement.<br>cd .. : go up a level in terms of directories.<br>cd : go to the root directory.<br>ls : show all files and folders in current directory.<br>pwd : show the path to the current working directory.<br>cat [filenames delimited by spaces]: prints out the contents of a file. Please only use this with text files.<br>clear : will clear the console of previous commands.<br>vim or vi : use vim or vi text editors<br>nano : use nano text editor<br>emacs : use emacs text editor<br>&lt up &gt and &lt down &gt : go up and down ur bash history<br>&lt tab &gt : autocomplete file or folder name<br>[command] & [command] : chains commands one after another<br></p>";
 		}
 	};
 	const explore = function(root) {
