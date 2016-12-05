@@ -91,6 +91,9 @@ app.controller('MainCtrl', function($scope, $sce) {
 					files_copy['..'] = tmp;
                     files_copy['~'] = root_file;
 				}
+                else {
+                    return "" + dest + " is not a folder. <br>"
+                }
 			}
 			path = path_temp;
 			files = files_copy;
