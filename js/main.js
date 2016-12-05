@@ -201,7 +201,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 		}
 		if (all) {
 			audio.play();
-			$scope.commands += "<br><img src='ascii-1060.gif' width='700px' autocofocus/><br>"
+			$scope.commands += "<br><img class='gif' src='ascii-1060.gif' width='700px' autocofocus/><br>"
 		}
 		if (keyCode == 9) {
 			e.preventDefault();
