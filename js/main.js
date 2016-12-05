@@ -36,7 +36,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				'ixperience.txt': '<h2><a href="http://ixperience.co.za/">IXperience Web Developer Intern</a></h2><p>Description: Assisted in developing alumni platform website and responsible for backend development of platform <br> Worked with Type Form API in order to improve how potential client data is stored</p>',
 
 				'grader.txt' : '<h2>Grader, Introduction to Computer Science</h2><p>Description: Graded papers and analyzed homework projects as a grader for Computer Science 101.</p>',
-				
+
 			},
 			'interests': {
 				'anime_manga.txt': '<h2>Anime and Manga</h2><p>Description: I love watching anime and reading manga. In fact, I spent a summer in Japan studying animation techniques and Japanese Languag at the Yoyogi Animation Gakkuin. I plan on studying Japanese through college and hope I have the oppertunity to visit again.</p>',
@@ -64,6 +64,8 @@ app.controller('MainCtrl', function($scope, $sce) {
 	var na = new Audio('na.mp3');
 	var konami = [38,38,40,40,37,39,37,39,66,65];
 	var path = [];
+    const removeEmpty = function(arr) { return arr.reduce(function(acc, val, i) { return val ? acc.concat(val) : acc }, []) };
+
 	const commands = {
 		'cd': function(args) {
 			var files_copy = files;
@@ -72,11 +74,13 @@ app.controller('MainCtrl', function($scope, $sce) {
 				path = [];
 				files = root_file; return '';
 			}
-			const dests = args[0].split('/');
+			const dests = removeEmpty(args[0].trim().split('/'));
 			for (var i = 0; i < dests.length; i++) {
 				var dest = dests[i];
-				if (dest === ".." || dest == '.') {
+                if (files_copy[dest] === undefined) return "" + dest + " is not a folder. <br>";
+				else if (files_copy[dest] !== undefined  && (dest === ".." || dest === '.' || dest === '~')) {
 					if (dest === '..') path_temp.pop();
+                    if (dest === '~') path_temp.splice(0, path_temp.length);
 					files_copy = files_copy[dest];
 				}
 				else if (files_copy[dest] !== undefined && typeof files_copy[dest] === 'object') {
@@ -85,9 +89,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 					files_copy = tmp[dest];
 					files_copy['.'] = files_copy;
 					files_copy['..'] = tmp;
-				}
-				else {
-					return "" + dest + " is not a folder. <br />";
+                    files_copy['~'] = root_file;
 				}
 			}
 			path = path_temp;
@@ -97,7 +99,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 		'ls': function(args) {
 			var temp = files;
 			if (args.length != 0) {
-				const dests = args[0].split('/');
+				const dests = removeEmpty(args[0].trim().split('/'));
 				for (var i = 0; i < dests.length; i++) {
 					var dest = dests[i];
 		 			if (temp[dest] !== undefined && typeof temp[dest] === 'object') {
@@ -109,7 +111,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				}
 			}
 			return Object.keys(temp).reduce(function(acc, curr_val, curr_i) {
-				if (curr_val[0] === '.') return acc;
+				if (curr_val[0] === '.' || curr_val === '~') return acc;
 				else if (typeof temp[curr_val] === 'object') return acc + curr_val + "/&nbsp&nbsp&nbsp";
 				else return acc + curr_val + "&nbsp&nbsp&nbsp";
 			}, "") + "<br />";
@@ -134,7 +136,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				}
 				const file_name = dests.pop();
 				if (temp[file_name] === undefined) return acc + file_name + " doesn't exist sorry! <br />";
-				else if (typeof temp[file_name] === 'string') return acc + temp[file_name] + "<br />";
+				else if (typeof temp[file_name] === 'string') return acc + temp[file_name] + "<br><br><br>";
 				else return acc + file_name + " is not a file! <br />";
 			}, "");
 		},
@@ -143,11 +145,11 @@ app.controller('MainCtrl', function($scope, $sce) {
 				return acc + '/' + val;
 			}, '') + '<br />';
 		},
-		'vim': function() { 
+		'vim': function() {
 			err.play();
 			return 'Yea I feel your pain as a fellow vim guy.<br />';
 		},
-		'vi': function() { 
+		'vi': function() {
 			err.play();
 			return 'Yea I feel your pain as a fellow vim guy.<br />';
 		},
@@ -157,8 +159,8 @@ app.controller('MainCtrl', function($scope, $sce) {
 		'nano': function() {
 			return 'Why would you use nano<br><img src="https://media.giphy.com/media/w6MNHOoLEzBVm/giphy.gif" style="filter: grayscale(100%);"><br>';
 		},
-		'whoami': function() { 
-			return "Good question. You think you are " + $scope.guest + ", but who really knows.<br>"; 
+		'whoami': function() {
+			return "Good question. You think you are " + $scope.guest + ", but who really knows.<br>";
 		},
 		'help': function() {
 			return "<br><p>cd [folder_name] : change directories to a folder. This will not work if a file is given as an arguement.<br>cd .. : go up a level in terms of directories.<br>cd : go to the root directory.<br>ls : show all files and folders in current directory.<br>pwd : show the path to the current working directory.<br>cat [filenames delimited by spaces]: prints out the contents of a file. Please only use this with text files.<br>clear : will clear the console of previous commands.<br>vim or vi : use vim or vi text editors<br>nano : use nano text editor<br>emacs : use emacs text editor<br>&lt up &gt and &lt down &gt : go up and down ur bash history<br>&lt tab &gt : autocomplete file or folder name<br>[command] & [command] : chains commands one after another<br></p>";
@@ -235,7 +237,6 @@ app.controller('MainCtrl', function($scope, $sce) {
 			const del_comm = comm.trim().replace(/  +/g, ' ').split(' ');
 			var message = "";
 			if (all_comms.indexOf(del_comm[0]) < 0) {
-				na.play();
 				message = "<p style=\"color:#ff0033;margin:0;\">OK so I made this during my OS class it's not actually a terminal. Just use basic linux commands (NO FLAGS I have a life)</p>";
 			}
 			else {
