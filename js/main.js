@@ -65,6 +65,8 @@ app.controller('MainCtrl', function($scope, $sce) {
 	var konami = [38,38,40,40,37,39,37,39,66,65];
 	var path = [];
     const removeEmpty = function(arr) { return arr.reduce(function(acc, val, i) { return val ? acc.concat(val) : acc }, []) };
+    var doubleTap = false;
+    var lastKeyPressTimeStamp = 0;
 
 	const commands = {
 		'cd': function(args) {
@@ -208,7 +210,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 		}
 		if (keyCode == 9) {
 			e.preventDefault();
-			const path = $scope.current_command.trim().split(' ').pop();
+			const path = $scope.current_command.split(' ').pop();
 			const del_path = path.split('/');
 			const term = del_path[del_path.length - 1];
 			var temp = files;
@@ -217,7 +219,7 @@ app.controller('MainCtrl', function($scope, $sce) {
 				else temp = temp[del_path[i]];
 			}
 			const f = Object.keys(temp);
-			if (term.length > 0) {
+			if (term.length >= 0) {
 				const possible = f.reduce(function(acc, val, i) {
 					if (val.length > term.length && val.substring(0, term.length) === term) {
 						acc.push(val.substring(term.length, val.length));
@@ -225,7 +227,13 @@ app.controller('MainCtrl', function($scope, $sce) {
 					return acc;
 				}, []);
 				if (possible.length === 1) $scope.current_command += possible[0];
+				else if (doubleTap &&  e.timeStamp - lastKeyPressTimeStamp <= 500) $scope.commands += $scope.guest + " >> " + $scope.current_command + "<br />" + possible.reduce(function(acc, val, i) {
+					return term + val + "&nbsp&nbsp&nbsp&nbsp" + acc;
+				},'<br>');
 			}
+			console.log(e);
+			doubleTap = !doubleTap;
+			lastKeyPressTimeStamp = e.timeStamp;
 		}
 	};
 
